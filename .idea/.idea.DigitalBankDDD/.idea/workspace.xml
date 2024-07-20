@@ -10,7 +10,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment="" />
+    <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Account.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Database/BankContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/DigitalBankDDD.Infra.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/DigitalBankDDD.Infra.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/DigitalBankDDD.Web.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/DigitalBankDDD.Web.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.sln" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.sln" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,6 +46,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    ".NET Launch Settings Profile.DigitalBankDDD.Web: http.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "node.js.detected.package.eslint": "true",
@@ -52,7 +65,7 @@
     ]
   }
 }]]></component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.DigitalBankDDD: http">
+  <component name="RunManager" selected=".NET Launch Settings Profile.DigitalBankDDD.Web: http">
     <configuration name="DigitalBankDDD: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/DigitalBankDDD/DigitalBankDDD.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
@@ -124,7 +137,10 @@
       <updated>1721170278539</updated>
       <workItem from="1721170280168" duration="1781000" />
       <workItem from="1721172068555" duration="115000" />
-      <workItem from="1721172248848" duration="1097000" />
+      <workItem from="1721172248848" duration="1746000" />
+      <workItem from="1721173999866" duration="825000" />
+      <workItem from="1721441857997" duration="383000" />
+      <workItem from="1721442345865" duration="4473000" />
     </task>
     <servers />
   </component>
