@@ -10,15 +10,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720032514_init.Designer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720032514_init.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720033637_relation.Designer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720033637_relation.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/BankContextModelSnapshot.cs" afterDir="false" />
+    <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment=":construction: UserController.cs">
+      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Interfaces/IGenericRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Repositories/GenericRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/DigitalBankDDD.Infra.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/DigitalBankDDD.Infra.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/AccountController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,7 +135,7 @@
       <workItem from="1721173999866" duration="825000" />
       <workItem from="1721441857997" duration="383000" />
       <workItem from="1721442345865" duration="4671000" />
-      <workItem from="1721698798573" duration="813000" />
+      <workItem from="1721698798573" duration="3748000" />
     </task>
     <task id="LOCAL-00001" summary=":sparkles: database context">
       <option name="closed" value="true" />
@@ -148,7 +145,31 @@
       <option name="project" value="LOCAL" />
       <updated>1721446888427</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary=":wrench: Hash string on Transaction">
+      <option name="closed" value="true" />
+      <created>1721699642371</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1721699642371</updated>
+    </task>
+    <task id="LOCAL-00003" summary=":fire: deleting Class1 files">
+      <option name="closed" value="true" />
+      <created>1721699706143</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1721699706143</updated>
+    </task>
+    <task id="LOCAL-00004" summary=":construction: UserController.cs">
+      <option name="closed" value="true" />
+      <created>1721699924046</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1721699924046</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -158,6 +179,9 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value=":sparkles: database context" />
-    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: database context" />
+    <MESSAGE value=":wrench: Hash string on Transaction" />
+    <MESSAGE value=":fire: deleting Class1 files" />
+    <MESSAGE value=":construction: UserController.cs" />
+    <option name="LAST_COMMIT_MESSAGE" value=":construction: UserController.cs" />
   </component>
 </project>
