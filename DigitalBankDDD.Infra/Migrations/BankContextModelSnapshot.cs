@@ -78,6 +78,9 @@ namespace DigitalBankDDD.Infra.Migrations
                     b.Property<int>("FromAccountId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Hash")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("ToAccountId")
                         .HasColumnType("int");
 
