@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DigitalBankDDD.Domain\DigitalBankDDD.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
