@@ -1,15 +1,16 @@
 using System.Linq.Expressions;
+using DigitalBankDDD.Domain.Entities;
 using DigitalBankDDD.Domain.Interfaces;
 using DigitalBankDDD.Infra.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace DigitalBankDDD.Infra.Repositories;
 
-public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
 {
     protected readonly BankContext BankContext;
     
-    public GenericRepository(BankContext bankContext)
+    public Repository(BankContext bankContext)
     {
         BankContext = bankContext;
     }

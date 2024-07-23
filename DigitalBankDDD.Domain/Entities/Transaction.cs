@@ -5,11 +5,8 @@ using System.Text;
 
 namespace DigitalBankDDD.Domain.Entities;
 
-public class Transaction
+public class Transaction : BaseEntity
 {
-    [Key]
-    public int TransactionId { get; set; }
-    
     [Required]
     public decimal Amount { get; set; }
     
@@ -32,7 +29,7 @@ public class Transaction
 
     private string GenerateHash()
     {
-        var inputString = $"{TransactionId}{Amount}{FromAccountId}{ToAccountId}{Description}{CreatedAt}";
+        var inputString = $"{Id}{Amount}{FromAccountId}{ToAccountId}{Description}{CreatedAt}";
         using var sha256 = SHA256.Create();
         var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(inputString));
         return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();

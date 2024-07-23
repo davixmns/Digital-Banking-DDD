@@ -1,8 +1,9 @@
 using System.Linq.Expressions;
+using DigitalBankDDD.Domain.Entities;
 
 namespace DigitalBankDDD.Domain.Interfaces;
 
-public interface IGenericRepository<TEntity> where TEntity : class
+public interface IRepository<TEntity> where TEntity : BaseEntity
 {
     Task<IEnumerable<TEntity>> GetAllAsync();
     Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate);

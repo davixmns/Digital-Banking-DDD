@@ -3,11 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace DigitalBankDDD.Domain.Entities;
 
-public class Account
+public class Account : BaseEntity
 {
-    [Key]
-    public int AccountId { get; set; }
-    
     public decimal Balance { get; set; }
     
     [Required]
