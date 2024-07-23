@@ -11,17 +11,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Account.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Database/BankContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/indexLayout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720032514_init.Designer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720032514_init.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720033637_relation.Designer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720033637_relation.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/BankContextModelSnapshot.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/DigitalBankDDD.Infra.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/DigitalBankDDD.Infra.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/DigitalBankDDD.Web.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/DigitalBankDDD.Web.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Properties/launchSettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/appsettings.Development.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.sln" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.sln" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +26,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/HomeController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/davixmns/projetos/dotnet/DigitalBankDDD/DigitalBankDDD.Web/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
@@ -44,27 +41,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.DigitalBankDDD.Web: http.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Color Scheme Font",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.DigitalBankDDD.Web: http.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Color Scheme Font&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "/Users/davixmns/Library/Application Support/JetBrains/Rider2023.3/resharper-host/DecompilerCache",
-      "/Users/davixmns/Library/Application Support/JetBrains/Rider2023.3/resharper-host/SourcesCache",
-      "/Users/davixmns/.local/share/Symbols/src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/Users/davixmns/Library/Application Support/JetBrains/Rider2023.3/resharper-host/DecompilerCache&quot;,
+      &quot;/Users/davixmns/Library/Application Support/JetBrains/Rider2023.3/resharper-host/SourcesCache&quot;,
+      &quot;/Users/davixmns/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.DigitalBankDDD.Web: http">
     <configuration name="DigitalBankDDD: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/DigitalBankDDD/DigitalBankDDD.csproj" />
@@ -140,8 +137,18 @@
       <workItem from="1721172248848" duration="1746000" />
       <workItem from="1721173999866" duration="825000" />
       <workItem from="1721441857997" duration="383000" />
-      <workItem from="1721442345865" duration="4473000" />
+      <workItem from="1721442345865" duration="4671000" />
+      <workItem from="1721698798573" duration="813000" />
     </task>
+    <task id="LOCAL-00001" summary=":sparkles: database context">
+      <option name="closed" value="true" />
+      <created>1721446888427</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1721446888427</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -150,5 +157,7 @@
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value=":sparkles: database context" />
+    <option name="LAST_COMMIT_MESSAGE" value=":sparkles: database context" />
   </component>
 </project>

@@ -5,8 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var mysqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 
-Console.WriteLine(mysqlConnection);
-
 builder.Services.AddDbContext<BankContext>(options =>
     options.UseMySql(mysqlConnection, ServerVersion.AutoDetect(mysqlConnection)));
 
