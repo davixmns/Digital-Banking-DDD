@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\DigitalBankDDD.Application\DigitalBankDDD.Application.csproj" />
       <ProjectReference Include="..\DigitalBankDDD.Infra\DigitalBankDDD.Infra.csproj" />
     </ItemGroup>
 

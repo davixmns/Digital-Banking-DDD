@@ -1,4 +1,5 @@
 using DigitalBankDDD.Infra.Database;
+using DigitalBankDDD.Infra.Utils;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,5 +22,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+using var scope = app.Services.CreateScope();
+var dbContext = scope.ServiceProvider.GetRequiredService<BankContext>();
+DatabaseConnectionTester.TestConnection(dbContext);
 
 app.Run();
