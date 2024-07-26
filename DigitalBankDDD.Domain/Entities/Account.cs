@@ -31,4 +31,22 @@ public class Account : BaseEntity
     {
         Transactions = new List<Transaction>();
     }
+    
+    public void Deposit(decimal amount)
+    {
+        if (amount <= 0)
+            throw new ArgumentException("The amount must be greater than zero.");
+        
+        Balance += amount;
+    }
+    
+    public void Withdraw(decimal amount)
+    {
+        Balance -= amount;
+    }
+    
+    public bool HasBalance(decimal amount)
+    {
+        return Balance >= amount;
+    }
 }

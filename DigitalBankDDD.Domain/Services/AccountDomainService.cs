@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using DigitalBankDDD.Domain.Entities;
 using DigitalBankDDD.Domain.Exceptions;
 using DigitalBankDDD.Domain.Interfaces;
@@ -17,8 +18,11 @@ public sealed class AccountDomainService : IAccountDomainService
 
     public async Task<Account> CreateAccountAsync(Account account)
     {
-        if (await AccountExistsAsync(account.Email!))
-            throw new DomainException("Account already exists.");
+        if (await GetAccountAsync(a => a.Email == account.Email) is not null)
+            throw new DomainException("This email is already in use.");
+
+        if (await GetAccountAsync(a => a.Cpf == account.Cpf) is not null)
+            throw new DomainException("This CPF is already in use.");
 
         var createdAccount = _accountRepository.Save(account);
         
@@ -27,9 +31,8 @@ public sealed class AccountDomainService : IAccountDomainService
         return createdAccount;
     }
     
-    private async Task<bool> AccountExistsAsync(string email)
+    public async Task<Account?> GetAccountAsync(Expression<Func<Account, bool>> predicate)
     {
-        var accountExists = await _accountRepository.GetAsync(a => a.Email == email);
-        return accountExists != null;
+        return await _accountRepository.GetAsync(predicate);
     }
 }

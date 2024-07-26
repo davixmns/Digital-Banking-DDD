@@ -1,5 +1,4 @@
 using DigitalBankDDD.Application.Interfaces;
-using DigitalBankDDD.Application.Services;
 using DigitalBankDDD.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
