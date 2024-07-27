@@ -5,6 +5,5 @@ namespace DigitalBankDDD.Domain.Interfaces;
 
 public interface IAccountDomainService
 {
-    Task<Account> CreateAccountAsync(Account account);
-    Task<Account?> GetAccountAsync(Expression<Func<Account, bool>> predicate);
+    void ValidateAccountCreation(Account account);
 }

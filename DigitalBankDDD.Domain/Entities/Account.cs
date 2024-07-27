@@ -17,12 +17,21 @@ public class Account : BaseEntity
     public string? Email { get; set; }
     
     [StringLength(20)]
-    [MinLength(11)]
-    public string? Cpf { get; set; }
+    [RegularExpression(@"\d{11}", ErrorMessage = "Invalid CPF size")]
+    public string Cpf { get; init; } = string.Empty;
+    
+    [Required]
+    [DataType(DataType.Date)]
+    public DateOnly BirthDate { get; set; }
+    
+    
+    [StringLength(20)] //aceiar telefones nesse formato +55 11 99999-9999
+    [RegularExpression(@"^[+]{1}(?:[0-9\-\(\)\/\.]\s?){6, 15}[0-9]{1}$", ErrorMessage = "Invalid phone number")]
+    public string? PhoneNumber { get; set; }
     
     [Required] 
     [MinLength(12)] 
-    public string? Password { get; set; }
+    public string? Password { get; set; } = string.Empty;
     
     [JsonIgnore]
     public List<Transaction>? Transactions { get; set; }

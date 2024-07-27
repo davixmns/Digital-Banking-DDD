@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using DigitalBankDDD.Domain.Entities;
 using DigitalBankDDD.Domain.Exceptions;
 using DigitalBankDDD.Domain.Interfaces;
@@ -7,32 +6,63 @@ namespace DigitalBankDDD.Domain.Services;
 
 public sealed class AccountDomainService : IAccountDomainService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IRepository<Account> _accountRepository;
-    
-    public AccountDomainService(IUnitOfWork unitOfWork)
+    public void ValidateAccountCreation(Account account)
     {
-        _unitOfWork = unitOfWork;
-        _accountRepository = _unitOfWork.GetRepository<Account>();
-    }
-
-    public async Task<Account> CreateAccountAsync(Account account)
-    {
-        if (await GetAccountAsync(a => a.Email == account.Email) is not null)
-            throw new DomainException("This email is already in use.");
-
-        if (await GetAccountAsync(a => a.Cpf == account.Cpf) is not null)
-            throw new DomainException("This CPF is already in use.");
-
-        var createdAccount = _accountRepository.Save(account);
+        if(!ValidateCpf(account.Cpf))
+            throw new DomainException("Invalid CPF.");
         
-        await _unitOfWork.CommitAsync();
+        if(!VerifyLegalAge(account.BirthDate))
+            throw new DomainException("The account holder must be of legal age.");
+    }
 
-        return createdAccount;
+    private static bool ValidateCpf(string cpf)
+    {
+        var invalidsCpf = new[]
+        {
+            "00000000000", "11111111111", "22222222222", "33333333333",
+            "44444444444", "55555555555", "66666666666", "77777777777",
+            "88888888888", "99999999999"
+        };
+        
+        if (string.IsNullOrWhiteSpace(cpf) || cpf.Length != 11 || invalidsCpf.Contains(cpf))
+            return false;
+        
+        var cpfArray = cpf.Select(c => int.Parse(c.ToString())).ToArray();
+        
+        var firstDigitSum = 0;
+        
+        for (var i = 0; i < 9; i++)
+            firstDigitSum += cpfArray[i] * (10 - i);
+        
+        var calculatedFirstDigit = (firstDigitSum * 10) % 11;
+        
+        if (calculatedFirstDigit is 10 or 11)
+            calculatedFirstDigit = 0;
+        
+        if(!calculatedFirstDigit.Equals(cpfArray[9]))
+            return false;
+        
+        var secondDigitSum = 0;
+        
+        for (var i = 0; i < 10; i++)
+            secondDigitSum += cpfArray[i] * (11 - i);
+        
+        var calculatedSecondDigit = (secondDigitSum * 10) % 11;
+        
+        if (calculatedSecondDigit is 10 or 11)
+            calculatedSecondDigit = 0;
+        
+        if(!calculatedSecondDigit.Equals(cpfArray[10]))
+            return false;
+        
+        return true;
     }
     
-    public async Task<Account?> GetAccountAsync(Expression<Func<Account, bool>> predicate)
+    private static bool VerifyLegalAge(DateOnly birthDate)
     {
-        return await _accountRepository.GetAsync(predicate);
+        const int legalAge = 18;
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var age = today.Year - birthDate.Year;
+        return age >= legalAge;
     }
 }
