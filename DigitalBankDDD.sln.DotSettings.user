@@ -1,0 +1,7 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=dc9888c9_002Da095_002D4edb_002D9a1f_002D2817edd24b30/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestValidateCpf" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;NUnit3x::FF647A2B-2ADC-4EAD-8DD8-3B09FF831058::net8.0::DigitalBankDDD.Tests.AccountDomainServiceTests.TestVerifyLegalAge&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::FF647A2B-2ADC-4EAD-8DD8-3B09FF831058::net8.0::DigitalBankDDD.Tests.AccountDomainServiceTests.PhoneNumberTest&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

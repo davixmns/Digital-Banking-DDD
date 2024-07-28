@@ -3,6 +3,7 @@
   <component name="UserContentModel">
     <attachedFolders />
     <explicitIncludes>
+      <Path>.gitignore</Path>
       <Path>src</Path>
     </explicitIncludes>
     <explicitExcludes />
