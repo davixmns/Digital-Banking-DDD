@@ -33,7 +33,11 @@ namespace DigitalBankDDD.Infra.Migrations
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(65,30)");
 
+                    b.Property<DateOnly>("BirthDate")
+                        .HasColumnType("date");
+
                     b.Property<string>("Cpf")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
@@ -50,6 +54,10 @@ namespace DigitalBankDDD.Infra.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.HasKey("Id");
 

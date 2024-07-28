@@ -25,8 +25,8 @@ public class Account : BaseEntity
     public DateOnly BirthDate { get; set; }
     
     
-    [StringLength(20)] //aceiar telefones nesse formato +55 11 99999-9999
-    [RegularExpression(@"^[+]{1}(?:[0-9\-\(\)\/\.]\s?){6, 15}[0-9]{1}$", ErrorMessage = "Invalid phone number")]
+    [StringLength(20)]
+    [RegularExpression(@"^(\+[0-9]{2,3}\s?)?\(?[0-9]{2}\)?\s?[0-9]{5}-?[0-9]{4}$", ErrorMessage = "Invalid phone number")]
     public string? PhoneNumber { get; set; }
     
     [Required] 
