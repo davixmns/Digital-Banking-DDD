@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DigitalBankDDD.Web.Controllers;
 
+[ApiController]
 [Route("api/[controller]")]
 public sealed class AccountController : ControllerBase
 {
@@ -18,9 +19,9 @@ public sealed class AccountController : ControllerBase
     public async Task<IActionResult> CreateAccount([FromBody] Account newAccount)
     {
         var result = await _accountService.CreateAccountAsync(newAccount);
-
+        
         return result.IsSuccess
-            ? StatusCode(StatusCodes.Status201Created, result.Data)
-            : BadRequest(result.ErrorMessage);
+            ? Created(newAccount.Id.ToString(), result)
+            : BadRequest(result);
     }
 }

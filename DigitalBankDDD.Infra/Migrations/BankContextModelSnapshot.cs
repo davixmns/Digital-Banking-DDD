@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DigitalBankDDD.Infra.Migrations
+namespace DigitalBankDDD.Infra.Entities
 {
     [DbContext(typeof(BankContext))]
     partial class BankContextModelSnapshot : ModelSnapshot

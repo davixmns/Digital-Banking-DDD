@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace DigitalBankDDD.Domain.Entities;
 
@@ -22,7 +21,7 @@ public class Account : BaseEntity
     
     [Required]
     [DataType(DataType.Date)]
-    public DateOnly BirthDate { get; set; }
+    public DateTime BirthDate { get; set; }
     
     
     [StringLength(20)]
@@ -30,7 +29,7 @@ public class Account : BaseEntity
     public string? PhoneNumber { get; set; }
     
     [Required] 
-    [MinLength(12)] 
+    [MinLength(8)] 
     public string? Password { get; set; } = string.Empty;
     
     public Account()

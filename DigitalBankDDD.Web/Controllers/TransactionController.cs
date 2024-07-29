@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DigitalBankDDD.Web.Controllers;
 
+[ApiController]
 [Route("api/[controller]")]
 public sealed class TransactionController : ControllerBase
 {

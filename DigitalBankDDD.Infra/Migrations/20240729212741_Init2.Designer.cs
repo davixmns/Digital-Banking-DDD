@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DigitalBankDDD.Infra.Migrations
+namespace DigitalBankDDD.Infra.Entities
 {
     [DbContext(typeof(BankContext))]
-    [Migration("20240720033637_relation")]
-    partial class relation
+    [Migration("20240729212741_Init2")]
+    partial class Init2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,20 +27,25 @@ namespace DigitalBankDDD.Infra.Migrations
 
             modelBuilder.Entity("DigitalBankDDD.Domain.Entities.Account", b =>
                 {
-                    b.Property<int>("AccountId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("AccountId"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(65,30)");
 
+                    b.Property<DateOnly>("BirthDate")
+                        .HasColumnType("date");
+
                     b.Property<string>("Cpf")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -53,21 +58,22 @@ namespace DigitalBankDDD.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("AccountId");
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("DigitalBankDDD.Domain.Entities.Transaction", b =>
                 {
-                    b.Property<int>("TransactionId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("TransactionId"));
-
-                    b.Property<int?>("AccountId")
-                        .HasColumnType("int");
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(65,30)");
@@ -81,26 +87,38 @@ namespace DigitalBankDDD.Infra.Migrations
                     b.Property<int>("FromAccountId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Hash")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("ToAccountId")
                         .HasColumnType("int");
 
-                    b.HasKey("TransactionId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("AccountId");
+                    b.HasIndex("FromAccountId");
+
+                    b.HasIndex("ToAccountId");
 
                     b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("DigitalBankDDD.Domain.Entities.Transaction", b =>
                 {
-                    b.HasOne("DigitalBankDDD.Domain.Entities.Account", null)
-                        .WithMany("Transactions")
-                        .HasForeignKey("AccountId");
-                });
+                    b.HasOne("DigitalBankDDD.Domain.Entities.Account", "FromAccount")
+                        .WithMany()
+                        .HasForeignKey("FromAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("DigitalBankDDD.Domain.Entities.Account", b =>
-                {
-                    b.Navigation("Transactions");
+                    b.HasOne("DigitalBankDDD.Domain.Entities.Account", "ToAccount")
+                        .WithMany()
+                        .HasForeignKey("ToAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FromAccount");
+
+                    b.Navigation("ToAccount");
                 });
 #pragma warning restore 612, 618
         }

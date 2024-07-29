@@ -58,10 +58,10 @@ public sealed class AccountDomainService : IAccountDomainService
         return true;
     }
     
-    private static bool VerifyLegalAge(DateOnly birthDate)
+    private static bool VerifyLegalAge(DateTime birthDate)
     {
         const int legalAge = 18;
-        var today = DateOnly.FromDateTime(DateTime.Now);
+        var today = DateTime.Today;
         var age = today.Year - birthDate.Year;
         return age >= legalAge;
     }

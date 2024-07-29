@@ -10,19 +10,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Dtos/TransactionRequestDto.cs" afterDir="false" />
+    <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment=":truck: moving tests">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Interfaces/ITransactionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Interfaces/ITransactionService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Services/AccountService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Services/AccountService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Services/TransactionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Services/TransactionService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Account.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Account.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Interfaces/IUnitOfWork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Interfaces/IUnitOfWork.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/BankContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/BankContextModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Repositories/UnitOfWork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Repositories/UnitOfWork.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Services/AccountDomainService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Services/AccountDomainService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720032514_init.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720032514_init.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720033637_relation.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720033637_relation.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240723145700_transaction_hash.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240723145700_transaction_hash.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240723190600_base_entity.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240723190600_base_entity.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240727224912_birthdate.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240727224912_birthdate.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240729200703_transaction_update.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240729200703_transaction_update.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/BankContextModelSnapshot.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/AccountController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/TransactionController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/TransactionController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/appsettings.Development.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -216,7 +223,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721762429529</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary=":truck: moving tests">
+      <option name="closed" value="true" />
+      <created>1722287175544</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1722287175544</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -234,6 +249,7 @@
     <MESSAGE value=":sparkles: transaction hash migration" />
     <MESSAGE value=":sparkles: UnitOfWork" />
     <MESSAGE value=":construction: :sparkles: Account Services in Application and Domain, creating account" />
-    <option name="LAST_COMMIT_MESSAGE" value=":construction: :sparkles: Account Services in Application and Domain, creating account" />
+    <MESSAGE value=":truck: moving tests" />
+    <option name="LAST_COMMIT_MESSAGE" value=":truck: moving tests" />
   </component>
 </project>
