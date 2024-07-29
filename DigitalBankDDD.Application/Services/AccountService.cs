@@ -32,7 +32,7 @@ public sealed class AccountService : IAccountService
             _accountDomainService.ValidateAccountCreation(account);
 
             var createdAccount = _accountRepository.Save(account);
-            
+
             await _unitOfWork.CommitAsync();
 
             return ApiResult<Account>.Success(createdAccount);

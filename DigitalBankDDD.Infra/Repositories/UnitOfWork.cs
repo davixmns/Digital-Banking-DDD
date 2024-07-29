@@ -1,9 +1,8 @@
 using DigitalBankDDD.Domain.Entities;
 using DigitalBankDDD.Domain.Interfaces;
 using DigitalBankDDD.Infra.Database;
-using DigitalBankDDD.Infra.Repositories;
 
-namespace DigitalBankDDD.Infra.UnitOfWork;
+namespace DigitalBankDDD.Infra.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {
@@ -30,6 +29,19 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task CommitAsync()
     {
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            await RollBackAsync();
+            throw new Exception(ex.Message);
+        }
+    }
+    
+    public async Task RollBackAsync()
+    {
+        await _context.DisposeAsync(); 
     }
 }
