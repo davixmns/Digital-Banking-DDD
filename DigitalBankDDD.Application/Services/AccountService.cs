@@ -23,13 +23,13 @@ public sealed class AccountService : IAccountService
     {
         try
         {
+            _accountDomainService.ValidateAccountCreation(account);
+            
             if (await _accountRepository.GetAsync(a => a.Cpf == account.Cpf) is not null)
                 return ApiResult<Account>.Failure("This CPF is already in use.");
             
             if(await _accountRepository.GetAsync(a => a.Email == account.Email) is not null)
                 return ApiResult<Account>.Failure("This email is already in use.");
-            
-            _accountDomainService.ValidateAccountCreation(account);
 
             var createdAccount = _accountRepository.Save(account);
 

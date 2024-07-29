@@ -11,26 +11,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment=":truck: moving tests">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Account.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Account.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Services/AccountDomainService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Services/AccountDomainService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720032514_init.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720032514_init.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720033637_relation.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240720033637_relation.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240723145700_transaction_hash.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240723145700_transaction_hash.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240723190600_base_entity.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240723190600_base_entity.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240727224912_birthdate.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240727224912_birthdate.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240729200703_transaction_update.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/20240729200703_transaction_update.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Migrations/BankContextModelSnapshot.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/AccountController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/TransactionController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/TransactionController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Services/AccountService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Services/AccountService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
