@@ -33,12 +33,8 @@ public class Account : BaseEntity
     [MinLength(12)] 
     public string? Password { get; set; } = string.Empty;
     
-    [JsonIgnore]
-    public List<Transaction>? Transactions { get; set; }
-    
     public Account()
     {
-        Transactions = new List<Transaction>();
     }
     
     public void Deposit(decimal amount)

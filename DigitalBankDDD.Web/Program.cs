@@ -3,7 +3,7 @@ using DigitalBankDDD.Application.Services;
 using DigitalBankDDD.Domain.Interfaces;
 using DigitalBankDDD.Domain.Services;
 using DigitalBankDDD.Infra.Database;
-using DigitalBankDDD.Infra.UnitOfWork;
+using DigitalBankDDD.Infra.Repositories;
 using DigitalBankDDD.Infra.Utils;
 using Microsoft.EntityFrameworkCore;
 

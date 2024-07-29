@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace DigitalBankDDD.Domain.Entities;
 
@@ -17,14 +17,31 @@ public class Transaction : BaseEntity
     [Required]
     public int ToAccountId { get; set; }
     
+    [JsonIgnore]
+    public Account FromAccount { get; set; }
+    
+    [JsonIgnore]
+    public Account ToAccount { get; set; }
+    
     public string? Description { get; set; }
     
     public string? Hash { get; private set; }
     
     public DateTime CreatedAt { get; set; }
-
+    
     public Transaction()
     {
+    }
+    
+    public Transaction(decimal amount, Account fromAccount, Account toAccount, string description)
+    {
+        Amount = amount;
+        FromAccount = fromAccount;
+        FromAccountId = fromAccount.Id;
+        ToAccount = toAccount;
+        ToAccountId = toAccount.Id;
+        Description = description;
+        CreatedAt = DateTime.Now;
         Hash = GenerateHash();
     }
 
