@@ -1,4 +1,5 @@
 using DigitalBankDDD.Application.Dtos;
+using DigitalBankDDD.Application.Interfaces;
 using DigitalBankDDD.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +9,9 @@ namespace DigitalBankDDD.Web.Controllers;
 [Route("api/[controller]")]
 public sealed class TransactionController : ControllerBase
 {
-    private readonly TransactionService _transactionService;
+    private readonly ITransactionService _transactionService;
     
-    public TransactionController(TransactionService transactionService)
+    public TransactionController(ITransactionService transactionService)
     {
         _transactionService = transactionService;
     }

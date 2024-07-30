@@ -14,5 +14,5 @@ public class TransactionRequestDto
     
     [Required]
     [Range(0.01, double.MaxValue)]
-    public double Amount { get; set; }
+    public decimal Amount { get; set; }
 }

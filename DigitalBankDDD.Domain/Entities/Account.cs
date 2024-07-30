@@ -1,9 +1,13 @@
 using System.ComponentModel.DataAnnotations;
+using DigitalBankDDD.Domain.Exceptions;
 
 namespace DigitalBankDDD.Domain.Entities;
 
 public class Account : BaseEntity
 {
+    public string AccountNumber { get; private set; } = Guid.NewGuid().ToString().Substring(0, 10);
+    
+    //se colocar como privado o EF core não consegue mapear
     public decimal Balance { get; private set; } = 0;
     
     [Required]
@@ -31,26 +35,43 @@ public class Account : BaseEntity
     [Required] 
     [MinLength(8)] 
     public string? Password { get; set; } = string.Empty;
-    
-    public Account()
-    {
-    }
-    
-    public void Deposit(decimal amount)
+
+    public void TransferTo(Account destinationAccount, decimal amount)
     {
         if (amount <= 0)
-            throw new ArgumentException("The amount must be greater than zero.");
+            throw new DomainException("The amount must be greater than zero.");
+        
+        if (!HasBalance(amount))
+            throw new DomainException("Insufficient balance.");
+        
+        Withdraw(amount);
+        destinationAccount.Deposit(amount);
+    }
+    
+    private void Deposit(decimal amount)
+    {
+        if (amount <= 0)
+            throw new DomainException("The amount must be greater than zero.");
         
         Balance += amount;
     }
-    
-    public void Withdraw(decimal amount)
+
+    private void Withdraw(decimal amount)
     {
+        if (amount <= 0)
+            throw new DomainException("The amount must be greater than zero.");
+
+        if (!HasBalance(amount))
+            throw new DomainException("Insufficient balance.");
+        
         Balance -= amount;
     }
     
-    public bool HasBalance(decimal amount)
+    private bool HasBalance(decimal amount)
     {
+        if (amount <= 0)
+            throw new DomainException("The amount must be greater than zero.");
+
         return Balance >= amount;
     }
 }

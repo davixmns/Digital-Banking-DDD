@@ -1,4 +1,5 @@
 using DigitalBankDDD.Application.Interfaces;
+using DigitalBankDDD.Application.Mapper;
 using DigitalBankDDD.Application.Services;
 using DigitalBankDDD.Domain.Interfaces;
 using DigitalBankDDD.Domain.Services;
@@ -18,7 +19,8 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //Application
 builder.Services.AddScoped<IAccountService, AccountService>();
-
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 //Domain
 builder.Services.AddScoped<IAccountDomainService, AccountDomainService>();
 

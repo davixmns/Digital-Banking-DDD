@@ -1,3 +1,4 @@
+using AutoMapper;
 using DigitalBankDDD.Application.Dtos;
 using DigitalBankDDD.Application.Interfaces;
 using DigitalBankDDD.Application.Wrapper;
@@ -12,46 +13,45 @@ public class TransactionService : ITransactionService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRepository<Transaction> _transactionRepository;
     private readonly IRepository<Account> _accountRepository;
+    private readonly IMapper _mapper;
 
-    public TransactionService(IUnitOfWork unitOfWork)
+    public TransactionService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _transactionRepository = _unitOfWork.GetRepository<Transaction>();
         _accountRepository = _unitOfWork.GetRepository<Account>();
+        _mapper = mapper;
     }
     
-    public async Task<ApiResult<Transaction>> CreateTransactionAsync(TransactionRequestDto transactionRequestDto)
+    public async Task<ApiResult<TransactionResponseDto>> CreateTransactionAsync(TransactionRequestDto transactionRequestDto)
     {
         try
         {
             var fromAccount = await _accountRepository.GetAsync(a => a.Id == transactionRequestDto.FromAccountId);
             var toAccount = await _accountRepository.GetAsync(a => a.Id == transactionRequestDto.ToAccountId);
-            
-            if (fromAccount is null || toAccount is null)
-                return ApiResult<Transaction>.Failure("Account not found.");
-            
-            if(fromAccount.HasBalance((decimal) transactionRequestDto.Amount))
-                return ApiResult<Transaction>.Failure("Insufficient balance.");
 
+            if (fromAccount is null || toAccount is null)
+                return ApiResult<TransactionResponseDto>.Failure("Account not found.");
+
+            fromAccount.TransferTo(toAccount, transactionRequestDto.Amount);
+            
             var transaction = new Transaction(
-                amount: (decimal) transactionRequestDto.Amount,
+                amount: transactionRequestDto.Amount,
                 fromAccount: fromAccount,
                 toAccount: toAccount,
                 description: transactionRequestDto.Description
             );
             
-            fromAccount.Withdraw((decimal) transactionRequestDto.Amount);
-            toAccount.Deposit((decimal) transactionRequestDto.Amount);
-            
             var createdTransaction = _transactionRepository.Save(transaction);
             
             await _unitOfWork.CommitAsync();
             
-            return ApiResult<Transaction>.Success(createdTransaction);
+            return ApiResult<TransactionResponseDto>.Success(_mapper.Map<TransactionResponseDto>(createdTransaction));
         }
         catch (DomainException exception)
         {
-            return ApiResult<Transaction>.Failure(exception.Message);
+            await _unitOfWork.RollBackAsync();
+            return ApiResult<TransactionResponseDto>.Failure(exception.Message);
         }
     }
 }

@@ -18,10 +18,8 @@ public class Transaction : BaseEntity
     [Required]
     public int ToAccountId { get; set; }
     
-    [JsonIgnore]
     public Account FromAccount { get; set; }
     
-    [JsonIgnore]
     public Account ToAccount { get; set; }
     
     public string? Description { get; set; }
