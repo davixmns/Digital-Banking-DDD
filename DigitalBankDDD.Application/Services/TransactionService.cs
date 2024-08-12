@@ -31,8 +31,11 @@ public class TransactionService : ITransactionService
         if (fromAccount is null || toAccount is null)
             return AppResult<TransactionResponseDto>.Failure("Account not found.");
 
-        fromAccount.TransferTo(toAccount, transactionRequestDto.Amount);
+        var transferIsOk = fromAccount.TransferTo(toAccount, transactionRequestDto.Amount);
 
+        if(!transferIsOk.IsSuccess)
+            return AppResult<TransactionResponseDto>.Failure(transferIsOk.ErrorMessage);
+        
         var transaction = new Transaction(
             amount: transactionRequestDto.Amount,
             fromAccount: fromAccount,

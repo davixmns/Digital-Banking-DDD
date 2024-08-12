@@ -11,25 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Utils/CpfValidator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Utils/PhoneNumberValidator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Validators/AccountValidator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Validators/LoginRequestValidator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/shelf/Uncommitted_changes_before_Update_at_29_07_2024_16_17_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/shelf/Uncommitted_changes_before_Update_at_29_07_2024_16_17__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Dtos/AccountResponseDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Dtos/AccountResponseDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Dtos/LoginRequestDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Dtos/LoginRequestDto.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Services/TransactionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Services/TransactionService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Validations/LoginRequestInputValidation.cs" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Account.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Account.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Services/AccountDomainService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Services/AccountDomainService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Controllers/AccountController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/DigitalBankDDD.Web.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/DigitalBankDDD.Web.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Database/BankContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Database/BankContext.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,7 +147,8 @@
       <workItem from="1722653839555" duration="629000" />
       <workItem from="1723331094160" duration="1241000" />
       <workItem from="1723472111801" duration="5877000" />
-      <workItem from="1723483722007" duration="5717000" />
+      <workItem from="1723483722007" duration="5772000" />
+      <workItem from="1723497940986" duration="1815000" />
     </task>
     <task id="LOCAL-00001" summary=":sparkles: database context">
       <option name="closed" value="true" />
@@ -243,7 +230,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722522652298</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary=":construction: Utilizando FluentValidation">
+      <option name="closed" value="true" />
+      <created>1723489482852</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1723489482852</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -263,6 +258,7 @@
     <MESSAGE value=":construction: :sparkles: Account Services in Application and Domain, creating account" />
     <MESSAGE value=":construction: Creating Login with Email or Cpf" />
     <MESSAGE value=":sparles: Email or Cpf Custom validations" />
-    <option name="LAST_COMMIT_MESSAGE" value=":sparles: Email or Cpf Custom validations" />
+    <MESSAGE value=":construction: Utilizando FluentValidation" />
+    <option name="LAST_COMMIT_MESSAGE" value=":construction: Utilizando FluentValidation" />
   </component>
 </project>

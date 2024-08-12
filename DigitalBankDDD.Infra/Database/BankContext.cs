@@ -11,4 +11,19 @@ public class BankContext : DbContext
     public BankContext(DbContextOptions<BankContext> options) : base(options)
     {
     }
+    
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            foreach (var property in entity.GetProperties())
+            {
+                if (property.ClrType == typeof(string))
+                {
+                    property.SetColumnType("varchar(255)"); // Define o tipo varchar com tamanho 255 por padrão
+                }
+            }
+        }
+        base.OnModelCreating(modelBuilder);
+    }
 }

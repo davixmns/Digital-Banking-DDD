@@ -28,6 +28,8 @@ public class Transaction : BaseEntity
     
     public DateTime CreatedAt { get; set; }
     
+    public Transaction() { }
+    
     public Transaction(decimal amount, Account fromAccount, Account toAccount, string description)
     {
         Amount = amount;
