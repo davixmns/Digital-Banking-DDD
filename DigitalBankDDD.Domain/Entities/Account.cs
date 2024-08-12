@@ -1,93 +1,48 @@
-using System.ComponentModel.DataAnnotations;
 using DigitalBankDDD.Domain.Exceptions;
-using DigitalBankDDD.Domain.Wrapper;
 
 namespace DigitalBankDDD.Domain.Entities;
 
 public class Account : BaseEntity
 {
-    public string AccountNumber { get; private set; } = Guid.NewGuid().ToString().Substring(0, 10);
-    
-    //se colocar como privado o EF core não consegue mapear
+    public string AccountNumber { get; init; } = Guid.NewGuid().ToString().Substring(0, 10);
     public decimal Balance { get; private set; } = 0;
-    
-    [Required]
-    [StringLength(50)]
-    public string? Name { get; set; }
-    
-    [Required]
-    [EmailAddress]
-    [StringLength(50)]
-    public string? Email { get; set; }
-    
-    [StringLength(20)]
-    [RegularExpression(@"\d{11}", ErrorMessage = "Invalid CPF size")]
-    public string Cpf { get; init; } = string.Empty;
-    
-    [Required]
-    [DataType(DataType.Date)]
+    public string Name { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public string Cpf { get; set; } = string.Empty;
     public DateTime BirthDate { get; set; }
+    public string PhoneNumber { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
     
-    
-    [StringLength(20)]
-    [RegularExpression(@"^(\+[0-9]{2,3}\s?)?\(?[0-9]{2}\)?\s?[0-9]{5}-?[0-9]{4}$", ErrorMessage = "Invalid phone number")]
-    public string? PhoneNumber { get; set; }
-    
-    [Required] 
-    [MinLength(8)] 
-    public string? Password { get; set; } = string.Empty;
-
-    public DomainResult TransferTo(Account destinationAccount, decimal amount)
+    public void TransferTo(Account destinationAccount, decimal amount)
     {
-        if(Equals(destinationAccount))
-            return DomainResult.Failure("The source and destination accounts must be different.");
+        if(amount <= 0)
+            throw new DomainException("The amount must be greater than zero.");
         
-        var withdrawResult = Withdraw(amount);
+        if (!HasBalance(amount))
+            throw new DomainException("Insufficient balance.");
         
-        if (!withdrawResult.IsSuccess)
-            return withdrawResult;
-        
-        var depositResult = destinationAccount.Deposit(amount);
-        
-        if (!depositResult.IsSuccess)
-        {
-            Deposit(amount);
-            return depositResult;
-        }
-        
-        return DomainResult.Success();
+        Withdraw(amount);
+        destinationAccount.Deposit(amount);
     }
     
-    private DomainResult Deposit(decimal amount)
+    private void Deposit(decimal amount)
     {
         if (amount <= 0)
-            return DomainResult.Failure("The amount must be greater than zero.");
+            throw new DomainException("The amount must be greater than zero.");
         
         Balance += amount;
-        
-        return DomainResult.Success();
     }
 
-    private DomainResult Withdraw(decimal amount)
+    private void Withdraw(decimal amount)
     {
         if (amount <= 0)
-            return DomainResult.Failure("The amount must be greater than zero.");
-
-        if (!HasBalance(amount).IsSuccess)
-            return DomainResult.Failure("Insufficient balance.");
+            throw new DomainException("The amount must be greater than zero.");
         
         Balance -= amount;
-        
-        return DomainResult.Success();
     }
     
-    private DomainResult HasBalance(decimal amount)
+    private bool HasBalance(decimal amount)
     {
-        if (amount <= 0)
-            return DomainResult.Failure("The amount must be greater than zero.");
-
-        return Balance >= amount ?
-            DomainResult.Success() :
-            DomainResult.Failure("Insufficient balance.");
+        return Balance >= amount;
     }
 }

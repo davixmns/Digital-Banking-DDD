@@ -8,12 +8,13 @@ using DigitalBankDDD.Infra.Repositories;
 using DigitalBankDDD.Infra.Utils;
 using DigitalBankDDD.Web.Handlers;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var mysqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-
 
 //Infraestructure
 builder.Services.AddDbContext<BankContext>(options =>
@@ -29,13 +30,17 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 //Domain
 builder.Services.AddScoped<IAccountDomainService, AccountDomainService>();
 
-//Handlers
-builder.Services.AddProblemDetails();
+//Fluent Validation
+builder.Services.AddFluentValidationAutoValidation();
 
-//Utils
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>(); 
+builder.Services.AddFluentValidationAutoValidation()
+    .AddFluentValidationClientsideAdapters();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -49,6 +54,7 @@ if (app.Environment.IsDevelopment())
 
 using var scope = app.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetRequiredService<BankContext>();
+
 DatabaseConnectionTester.TestConnection(dbContext);
 
 app.MapControllers();

@@ -2,8 +2,8 @@ namespace DigitalBankDDD.Application.Dtos;
 
 public class AccountResponseDto
 {
-    public string AccountNumber { get; set; }
-    public string Name { get; set; }
-    public string PhoneNumber { get; set; }
-    public string Email { get; set; }
+    public string AccountNumber { get; init; } = string.Empty;
+    public string Name { get; init; } = string.Empty;
+    public string PhoneNumber { get; init; } = string.Empty;
+    public string Email { get; init; } = string.Empty;
 }

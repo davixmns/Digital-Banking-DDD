@@ -1,5 +1,6 @@
 using DigitalBankDDD.Application.Interfaces;
 using DigitalBankDDD.Domain.Entities;
+using DigitalBankDDD.Web.Validators;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DigitalBankDDD.Web.Controllers;

@@ -22,15 +22,11 @@ public class Transaction : BaseEntity
     
     public Account ToAccount { get; set; }
     
-    public string? Description { get; set; }
+    public string Description { get; set; }
     
-    public string? Hash { get; private set; }
+    public string Hash { get; private set; }
     
     public DateTime CreatedAt { get; set; }
-    
-    public Transaction()
-    {
-    }
     
     public Transaction(decimal amount, Account fromAccount, Account toAccount, string description)
     {
@@ -41,14 +37,6 @@ public class Transaction : BaseEntity
         ToAccountId = toAccount.Id;
         Description = description;
         CreatedAt = DateTime.Now;
-        Hash = GenerateHash();
-    }
-
-    private string GenerateHash()
-    {
-        var inputString = $"{Id}{Amount}{FromAccountId}{ToAccountId}{Description}{CreatedAt}";
-        using var sha256 = SHA256.Create();
-        var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(inputString));
-        return BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+        Hash = Guid.NewGuid().ToString();
     }
 }

@@ -31,10 +31,7 @@ public class TransactionService : ITransactionService
         if (fromAccount is null || toAccount is null)
             return AppResult<TransactionResponseDto>.Failure("Account not found.");
 
-        var transferResult = fromAccount.TransferTo(toAccount, transactionRequestDto.Amount);
-
-        if (!transferResult.IsSuccess)
-            return AppResult<TransactionResponseDto>.Failure(transferResult.ErrorMessage);
+        fromAccount.TransferTo(toAccount, transactionRequestDto.Amount);
 
         var transaction = new Transaction(
             amount: transactionRequestDto.Amount,
@@ -46,9 +43,7 @@ public class TransactionService : ITransactionService
         var createdTransaction = _transactionRepository.Save(transaction);
 
         await _unitOfWork.CommitAsync();
-
-        var dtoTransaction = _mapper.Map<TransactionResponseDto>(createdTransaction);
-
-        return AppResult<TransactionResponseDto>.Success(dtoTransaction);
+        
+        return AppResult<TransactionResponseDto>.Success(_mapper.Map<TransactionResponseDto>(createdTransaction));
     }
 }
