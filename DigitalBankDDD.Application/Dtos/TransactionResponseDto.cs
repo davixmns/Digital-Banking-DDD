@@ -1,14 +1,16 @@
+using DigitalBankDDD.Domain.ValueObjects;
+
 namespace DigitalBankDDD.Application.Dtos;
 
 public class TransactionResponseDto
 {
-    public double Amount { get; set; }
+    public Amount Amount { get; set; }
     public string Hash { get; set; }
     public string Description { get; set; }
     public AccountResponseDto ToAccount { get; set; }
     public AccountResponseDto FromAccount { get; set; }
     
-    public TransactionResponseDto(double amount, string hash, string description, AccountResponseDto toAccount, AccountResponseDto fromAccount)
+    public TransactionResponseDto(Amount amount, string hash, string description, AccountResponseDto toAccount, AccountResponseDto fromAccount)
     {
         Amount = amount;
         Hash = hash;

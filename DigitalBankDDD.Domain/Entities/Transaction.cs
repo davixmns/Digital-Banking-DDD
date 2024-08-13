@@ -3,34 +3,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
+using DigitalBankDDD.Domain.ValueObjects;
 
 namespace DigitalBankDDD.Domain.Entities;
 
 public class Transaction : BaseEntity
 {
-    [Required]
-    [Range(0.01, double.MaxValue)]
-    public decimal Amount { get; set; }
-    
-    [Required]
+    public Amount Amount { get; set; }
     public int FromAccountId { get; set; }
-    
-    [Required]
-    public int ToAccountId { get; set; }
-    
     public Account FromAccount { get; set; }
-    
+    public int ToAccountId { get; set; }
     public Account ToAccount { get; set; }
-    
     public string Description { get; set; }
-    
     public string Hash { get; private set; }
-    
     public DateTime CreatedAt { get; set; }
     
-    public Transaction() { }
+    public Transaction() 
+    { }
     
-    public Transaction(decimal amount, Account fromAccount, Account toAccount, string description)
+    public Transaction(Amount amount, Account fromAccount, Account toAccount, string description)
     {
         Amount = amount;
         FromAccount = fromAccount;

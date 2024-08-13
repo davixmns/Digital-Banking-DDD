@@ -2,7 +2,7 @@ using DigitalBankDDD.Domain.Entities;
 using DigitalBankDDD.Domain.Utils;
 using FluentValidation;
 
-namespace DigitalBankDDD.Web.Validators;
+namespace DigitalBankDDD.Application.Validators;
 
 public class AccountValidator : AbstractValidator<Account>
 {

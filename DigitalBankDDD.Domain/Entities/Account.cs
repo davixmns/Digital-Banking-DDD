@@ -1,3 +1,4 @@
+using DigitalBankDDD.Domain.ValueObjects;
 using DigitalBankDDD.Domain.Wrapper;
 
 namespace DigitalBankDDD.Domain.Entities;
@@ -13,11 +14,8 @@ public class Account : BaseEntity
     public string PhoneNumber { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     
-    public DomainResult TransferTo(Account destinationAccount, decimal amount)
+    public DomainResult TransferTo(Account destinationAccount, Amount amount)
     {
-        if(amount <= 0)
-            return DomainResult.Failure("The amount must be greater than zero.");
-        
         if (!HasBalance(amount))
             return DomainResult.Failure("Insufficient balance.");
         
@@ -27,28 +25,18 @@ public class Account : BaseEntity
         return DomainResult.Success();
     }
     
-    private DomainResult Deposit(decimal amount)
+    private void Deposit(Amount amount)
     {
-        if (amount <= 0)
-            return DomainResult.Failure("The amount must be greater than zero.");
-        
-        Balance += amount;
-        
-        return DomainResult.Success();
+        Balance += amount.Value;
     }
 
-    private DomainResult Withdraw(decimal amount)
+    private void Withdraw(Amount amount)
     {
-        if (amount <= 0)
-            return DomainResult.Failure("The amount must be greater than zero.");
-        
-        Balance -= amount;
-        
-        return DomainResult.Success();
+        Balance -= amount.Value;
     }
     
-    private bool HasBalance(decimal amount)
+    private bool HasBalance(Amount amount)
     {
-        return Balance >= amount;
+        return Balance >= amount.Value;
     }
 }

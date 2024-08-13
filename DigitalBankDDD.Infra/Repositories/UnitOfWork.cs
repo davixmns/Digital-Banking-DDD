@@ -1,6 +1,6 @@
 using DigitalBankDDD.Domain.Entities;
 using DigitalBankDDD.Domain.Interfaces;
-using DigitalBankDDD.Infra.Database;
+using DigitalBankDDD.Infra.Context;
 
 namespace DigitalBankDDD.Infra.Repositories;
 

@@ -1,9 +1,11 @@
 using DigitalBankDDD.Application.Interfaces;
 using DigitalBankDDD.Application.Mapper;
 using DigitalBankDDD.Application.Services;
+using DigitalBankDDD.Application.Validators;
+using DigitalBankDDD.Domain.Entities;
 using DigitalBankDDD.Domain.Interfaces;
 using DigitalBankDDD.Domain.Services;
-using DigitalBankDDD.Infra.Database;
+using DigitalBankDDD.Infra.Context;
 using DigitalBankDDD.Infra.Repositories;
 using DigitalBankDDD.Infra.Utils;
 using DigitalBankDDD.Web.Handlers;
@@ -31,7 +33,9 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IAccountDomainService, AccountDomainService>();
 
 //Fluent Validation
-builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<AmountValidator>();
+builder.Services.AddFluentValidationAutoValidation(); //validação seja feita automaticamente
+builder.Services.AddFluentValidationClientsideAdapters(); //Mensagens de erro de validação sejam exibidas no front-end
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

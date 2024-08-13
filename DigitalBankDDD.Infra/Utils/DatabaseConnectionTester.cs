@@ -1,4 +1,4 @@
-using DigitalBankDDD.Infra.Database;
+using DigitalBankDDD.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace DigitalBankDDD.Infra.Utils;

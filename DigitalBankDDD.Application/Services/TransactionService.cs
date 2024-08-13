@@ -27,14 +27,14 @@ public class TransactionService : ITransactionService
     {
         var fromAccount = await _accountRepository.GetAsync(a => a.Id == transactionRequestDto.FromAccountId);
         var toAccount = await _accountRepository.GetAsync(a => a.Id == transactionRequestDto.ToAccountId);
-        
-        if (fromAccount is null || toAccount is null)
+       
+        if(fromAccount == null || toAccount == null)
             return AppResult<TransactionResponseDto>.Failure("Account not found.");
+        
+        var transferResult = fromAccount.TransferTo(toAccount, transactionRequestDto.Amount);
 
-        var transferIsOk = fromAccount.TransferTo(toAccount, transactionRequestDto.Amount);
-
-        if(!transferIsOk.IsSuccess)
-            return AppResult<TransactionResponseDto>.Failure(transferIsOk.ErrorMessage);
+        if(!transferResult.IsSuccess)
+            return AppResult<TransactionResponseDto>.Failure(transferResult.ErrorMessage);
         
         var transaction = new Transaction(
             amount: transactionRequestDto.Amount,

@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using DigitalBankDDD.Domain.Entities;
 using DigitalBankDDD.Domain.Interfaces;
-using DigitalBankDDD.Infra.Database;
+using DigitalBankDDD.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace DigitalBankDDD.Infra.Repositories;

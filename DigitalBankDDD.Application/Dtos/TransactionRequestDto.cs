@@ -1,18 +1,16 @@
 using System.ComponentModel.DataAnnotations;
+using DigitalBankDDD.Domain.Entities;
+using DigitalBankDDD.Domain.ValueObjects;
 
 namespace DigitalBankDDD.Application.Dtos;
 
 public class TransactionRequestDto
 {
-    [Required]
     public int FromAccountId { get; set; }
-    
-    [Required]
+    public Account? FromAccount { get; set; }
     public int ToAccountId { get; set; }
-    
+    public Account? ToAccount { get; set; }
     public string Description { get; set; } = string.Empty;
     
-    [Required]
-    [Range(0.01, double.MaxValue)]
-    public decimal Amount { get; set; }
+    public Amount Amount { get; set; }
 }
