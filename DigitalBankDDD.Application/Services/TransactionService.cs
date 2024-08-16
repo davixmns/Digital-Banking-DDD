@@ -1,9 +1,9 @@
 using AutoMapper;
 using DigitalBankDDD.Application.Dtos;
 using DigitalBankDDD.Application.Interfaces;
+using DigitalBankDDD.Application.Utils;
 using DigitalBankDDD.Application.Wrapper;
 using DigitalBankDDD.Domain.Entities;
-using DigitalBankDDD.Domain.Exceptions;
 using DigitalBankDDD.Domain.Interfaces;
 
 namespace DigitalBankDDD.Application.Services;
@@ -23,30 +23,30 @@ public class TransactionService : ITransactionService
         _mapper = mapper;
     }
 
-    public async Task<AppResult<TransactionResponseDto>> CreateTransactionAsync(TransactionRequestDto transactionRequestDto) 
+    public async Task<AppResult<TransactionResponseDto>> CreateTransactionAsync(TransactionRequestDto transactionRequestDto)
     {
         var fromAccount = await _accountRepository.GetAsync(a => a.Id == transactionRequestDto.FromAccountId);
         var toAccount = await _accountRepository.GetAsync(a => a.Id == transactionRequestDto.ToAccountId);
-       
-        if(fromAccount == null || toAccount == null)
-            return AppResult<TransactionResponseDto>.Failure("Account not found.");
-        
-        var transferResult = fromAccount.TransferTo(toAccount, transactionRequestDto.Amount);
 
-        if(!transferResult.IsSuccess)
+        if (Validation.IsAnyNull(fromAccount, toAccount))
+            return AppResult<TransactionResponseDto>.Failure("Account not found");
+
+        var transferResult = fromAccount!.TransferTo(toAccount!, transactionRequestDto.Amount);
+
+        if (!transferResult.IsSuccess)
             return AppResult<TransactionResponseDto>.Failure(transferResult.ErrorMessage);
-        
-        var transaction = new Transaction(
+
+        var createdTransaction = _transactionRepository.Save(new Transaction(
             amount: transactionRequestDto.Amount,
             fromAccount: fromAccount,
-            toAccount: toAccount,
+            toAccount: toAccount!,
             description: transactionRequestDto.Description
-        );
-
-        var createdTransaction = _transactionRepository.Save(transaction);
+        ));
 
         await _unitOfWork.CommitAsync();
         
-        return AppResult<TransactionResponseDto>.Success(_mapper.Map<TransactionResponseDto>(createdTransaction));
+        var transactionResponseDto = _mapper.Map<TransactionResponseDto>(createdTransaction);
+        
+        return AppResult<TransactionResponseDto>.Success(transactionResponseDto);
     }
 }

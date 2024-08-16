@@ -11,24 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Validators/AmountValidator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Validators/TransactionRequestValidator.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/ValueObjects/Amount.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Utils/Validation.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/DigitalBankDDD.Application.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/DigitalBankDDD.Application.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Dtos/TransactionRequestDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Dtos/TransactionRequestDto.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Dtos/TransactionResponseDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Dtos/TransactionResponseDto.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Services/TransactionService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Services/TransactionService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Account.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Account.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Domain/Entities/Transaction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Database/BankContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Context/BankContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Repositories/Repository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Repositories/Repository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Repositories/UnitOfWork.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Repositories/UnitOfWork.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Infra/Utils/DatabaseConnectionTester.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Infra/Utils/DatabaseConnectionTester.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/DigitalBankDDD.Web.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/DigitalBankDDD.Web.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Web/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Validators/AccountValidator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Validators/AccountValidator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Web/Validators/LoginRequestValidator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Validators/LoginRequestValidator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigitalBankDDD.Application/Validators/TransactionRequestValidator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigitalBankDDD.Application/Validators/TransactionRequestValidator.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,27 +42,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.DigitalBankDDD.Web: http.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Color Scheme Font",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.DigitalBankDDD.Web: http.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "/Users/davixmns/Library/Application Support/JetBrains/Rider2023.3/resharper-host/DecompilerCache",
-      "/Users/davixmns/Library/Application Support/JetBrains/Rider2023.3/resharper-host/SourcesCache",
-      "/Users/davixmns/.local/share/Symbols/src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/Users/davixmns/Library/Application Support/JetBrains/Rider2023.3/resharper-host/DecompilerCache&quot;,
+      &quot;/Users/davixmns/Library/Application Support/JetBrains/Rider2023.3/resharper-host/SourcesCache&quot;,
+      &quot;/Users/davixmns/.local/share/Symbols/src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.DigitalBankDDD.Web: http">
     <configuration name="DigitalBankDDD: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/DigitalBankDDD/DigitalBankDDD.csproj" />
@@ -166,7 +153,12 @@
       <workItem from="1723555818417" duration="852000" />
       <workItem from="1723556674195" duration="13064000" />
       <workItem from="1723583401627" duration="2000" />
-      <workItem from="1723583416318" duration="1881000" />
+      <workItem from="1723583416318" duration="4009000" />
+      <workItem from="1723676954950" duration="603000" />
+      <workItem from="1723677876539" duration="95000" />
+      <workItem from="1723677993134" duration="64000" />
+      <workItem from="1723678146551" duration="145000" />
+      <workItem from="1723773994487" duration="3308000" />
     </task>
     <task id="LOCAL-00001" summary=":sparkles: database context">
       <option name="closed" value="true" />

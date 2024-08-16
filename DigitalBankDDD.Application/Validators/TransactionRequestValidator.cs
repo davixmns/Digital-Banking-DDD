@@ -7,11 +7,11 @@ namespace DigitalBankDDD.Application.Validators;
 
 public class TransactionRequestValidator : AbstractValidator<TransactionRequestDto>
 {
-    private readonly IRepository<Account> _accountRepository;
+    // private readonly IRepository<Account> _accountRepository;
     
     public TransactionRequestValidator(IUnitOfWork unitOfWork)
     {
-        _accountRepository = unitOfWork.GetRepository<Account>();
+        // _accountRepository = unitOfWork.GetRepository<Account>();
 
         RuleFor(x => x.FromAccountId)
             .Cascade(CascadeMode.Stop)
@@ -29,24 +29,24 @@ public class TransactionRequestValidator : AbstractValidator<TransactionRequestD
             .SetValidator(new AmountValidator());
     }
 
-    private bool AccountExists(TransactionRequestDto dto, int accountId)
-    {
-        var account = _accountRepository.GetAsync(a => a.Id == accountId).Result;
-
-        if (account != null)
-        {
-            if (dto.FromAccountId == accountId)
-            {
-                dto.FromAccount = account;
-            }
-            else if (dto.ToAccountId == accountId)
-            {
-                dto.ToAccount = account;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
+    // private bool AccountExists(TransactionRequestDto dto, int accountId)
+    // {
+    //     var account = _accountRepository.GetAsync(a => a.Id == accountId).Result;
+    //
+    //     if (account != null)
+    //     {
+    //         if (dto.FromAccountId == accountId)
+    //         {
+    //             dto.FromAccount = account;
+    //         }
+    //         else if (dto.ToAccountId == accountId)
+    //         {
+    //             dto.ToAccount = account;
+    //         }
+    //
+    //         return true;
+    //     }
+    //
+    //     return false;
+    // }
 }
