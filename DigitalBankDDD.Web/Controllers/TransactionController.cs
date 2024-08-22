@@ -1,6 +1,6 @@
+using DigitalBankDDD.Application.Commands;
 using DigitalBankDDD.Application.Dtos;
-using DigitalBankDDD.Application.Interfaces;
-using DigitalBankDDD.Application.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DigitalBankDDD.Web.Controllers;
@@ -9,17 +9,19 @@ namespace DigitalBankDDD.Web.Controllers;
 [Route("api/[controller]")]
 public sealed class TransactionController : ControllerBase
 {
-    private readonly ITransactionService _transactionService;
+    private readonly IMediator _mediator;
     
-    public TransactionController(ITransactionService transactionService)
+    public TransactionController(IMediator mediator)
     {
-        _transactionService = transactionService;
+        _mediator = mediator;
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateTransactionAsync(TransactionRequestDto transactionRequestDto)
     {
-        var result = await _transactionService.CreateTransactionAsync(transactionRequestDto);
+        var command = new CreateTransactionCommand(transactionRequestDto);
+        
+        var result = await _mediator.Send(command);
 
         return result.IsSuccess
             ? Ok(result)

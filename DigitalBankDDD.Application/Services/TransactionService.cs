@@ -5,6 +5,7 @@ using DigitalBankDDD.Application.Utils;
 using DigitalBankDDD.Application.Wrapper;
 using DigitalBankDDD.Domain.Entities;
 using DigitalBankDDD.Domain.Interfaces;
+using DigitalBankDDD.Domain.ValueObjects;
 
 namespace DigitalBankDDD.Application.Services;
 
@@ -12,35 +13,27 @@ public class TransactionService : ITransactionService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRepository<Transaction> _transactionRepository;
-    private readonly IRepository<Account> _accountRepository;
     private readonly IMapper _mapper;
 
     public TransactionService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _transactionRepository = _unitOfWork.GetRepository<Transaction>();
-        _accountRepository = _unitOfWork.GetRepository<Account>();
         _mapper = mapper;
     }
 
-    public async Task<AppResult<TransactionResponseDto>> CreateTransactionAsync(TransactionRequestDto transactionRequestDto)
+    public async Task<AppResult<TransactionResponseDto>> CreateTransactionAsync(Account fromAccount, Account toAccount, Amount amount, string description)
     {
-        var fromAccount = await _accountRepository.GetAsync(a => a.Id == transactionRequestDto.FromAccountId);
-        var toAccount = await _accountRepository.GetAsync(a => a.Id == transactionRequestDto.ToAccountId);
-
-        if (Validation.IsAnyNull(fromAccount, toAccount))
-            return AppResult<TransactionResponseDto>.Failure("Account not found");
-
-        var transferResult = fromAccount!.TransferTo(toAccount!, transactionRequestDto.Amount);
+        var transferResult = fromAccount.TransferTo(toAccount, amount);
 
         if (!transferResult.IsSuccess)
             return AppResult<TransactionResponseDto>.Failure(transferResult.ErrorMessage);
 
         var createdTransaction = _transactionRepository.Save(new Transaction(
-            amount: transactionRequestDto.Amount,
+            amount: amount,
             fromAccount: fromAccount,
             toAccount: toAccount!,
-            description: transactionRequestDto.Description
+            description: description
         ));
 
         await _unitOfWork.CommitAsync();

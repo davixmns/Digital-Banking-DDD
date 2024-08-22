@@ -1,5 +1,9 @@
+using System.Reflection;
+using DigitalBankDDD.Application.Commands;
+using DigitalBankDDD.Application.Handlers;
 using DigitalBankDDD.Application.Interfaces;
 using DigitalBankDDD.Application.Mapper;
+using DigitalBankDDD.Application.PipelineBehaviors;
 using DigitalBankDDD.Application.Services;
 using DigitalBankDDD.Application.Validators;
 using DigitalBankDDD.Domain.Entities;
@@ -12,6 +16,7 @@ using DigitalBankDDD.Web.Handlers;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +38,9 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IAccountDomainService, AccountDomainService>();
 
 //Fluent Validation
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateTransactionCommand>());
+
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddValidatorsFromAssemblyContaining<AmountValidator>();
 builder.Services.AddFluentValidationAutoValidation(); //validação seja feita automaticamente
 builder.Services.AddFluentValidationClientsideAdapters(); //Mensagens de erro de validação sejam exibidas no front-end
@@ -40,15 +48,11 @@ builder.Services.AddFluentValidationClientsideAdapters(); //Mensagens de erro de
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddValidatorsFromAssemblyContaining<Program>(); 
-builder.Services.AddFluentValidationAutoValidation()
-    .AddFluentValidationClientsideAdapters();
-
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.UseMiddleware<GlobalExceptionHandler>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

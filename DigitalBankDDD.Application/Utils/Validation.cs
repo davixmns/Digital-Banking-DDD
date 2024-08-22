@@ -1,3 +1,6 @@
+using DigitalBankDDD.Domain.Entities;
+using DigitalBankDDD.Domain.Interfaces;
+
 namespace DigitalBankDDD.Application.Utils;
 
 public static class Validation

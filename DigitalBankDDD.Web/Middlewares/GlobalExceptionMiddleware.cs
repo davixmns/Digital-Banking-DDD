@@ -3,12 +3,12 @@ using DigitalBankDDD.Domain.Exceptions;
 
 namespace DigitalBankDDD.Web.Handlers;
 
-public class GlobalExceptionHandler
+public class GlobalExceptionMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly ILogger<GlobalExceptionHandler> _logger;
+    private readonly ILogger<GlobalExceptionMiddleware> _logger;
 
-    public GlobalExceptionHandler(RequestDelegate next, ILogger<GlobalExceptionHandler> logger)
+    public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
     {
         _next = next;
         _logger = logger;

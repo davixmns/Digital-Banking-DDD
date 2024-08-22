@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using DigitalBankDDD.Domain.Entities;
 using DigitalBankDDD.Domain.ValueObjects;
 
 namespace DigitalBankDDD.Application.Dtos;
