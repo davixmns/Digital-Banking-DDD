@@ -5,10 +5,6 @@ on:
     branches:
       - 'feat/*'
 
-permissions:
-  issues: write  # Permite atualizar issues
-  pull-requests: write  # Opcional, para PRs
-
 jobs:
   link-branch:
     runs-on: ubuntu-latest
