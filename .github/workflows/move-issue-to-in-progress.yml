@@ -9,7 +9,7 @@ permissions:
   contents: read
   issues: read
   pull-requests: write
-  repository-projects: write
+  projects: write
 
 jobs:
   move-issue-in-project:
@@ -34,7 +34,6 @@ jobs:
               repo: context.repo.repo,
               issue_number: issueNumber
             });
-            // Retorna o node_id da issue para usar como itemId no Project v2
             return issue.node_id;
 
       - name: Atualizar status no Project v2
@@ -52,15 +51,15 @@ jobs:
                   projectId: $projectId,
                   itemId: $itemId,
                   fieldId: $fieldId,
-                  value: { 
-                    __typename: "ProjectV2ItemFieldSingleSelectValue",
-                    optionId: $optionId
+                  value: {
+                    singleSelectOptionId: $optionId
                   }
                 }) {
-                  item {
+                  projectV2Item {
                     id
                   }
                 }
               }
             `;
-            await github.graphql(mutation, { projectId, itemId, fieldId, optionId });
+            const result = await github.graphql(mutation, { projectId, itemId, fieldId, optionId });
+            console.log("Item atualizado:", result.updateProjectV2ItemFieldValue.projectV2Item.id);
