@@ -1,0 +1,65 @@
+name: Move Issue to In Progress
+
+on:
+  create:
+    branches:
+      - 'feat/*'
+      - 'fix/*'
+      - 'hotfix/*'
+      - 'chore/*'
+      - 'perf/*'
+      - 'docs/*'
+      - 'style/*'
+      - 'refactor/*'
+      - 'build/*'
+      - 'ci/*'
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  move-issue:
+    runs-on: ubuntu-latest
+    if: github.event.ref_type == 'branch'  # Executa apenas para branches
+    steps:
+      - name: Extract Issue Number from Branch Name
+        id: extract
+        run: |
+          BRANCH_NAME=${{ github.event.ref }}
+          ISSUE_NUMBER=$(echo $BRANCH_NAME | grep -oE '[0-9]+')
+          echo "ISSUE_NUMBER=$ISSUE_NUMBER" >> $GITHUB_ENV
+      - name: Get Project Column ID
+        id: get-column
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const projects = await github.rest.projects.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const project = projects.data.find(p => p.name === 'DigitalBankDDD');
+            if (!project) throw new Error('Project Board não encontrado');
+            const columns = await github.rest.projects.listColumns({
+              project_id: project.id
+            });
+            const inProgressColumn = columns.data.find(c => c.name === 'In Progress');
+            if (!inProgressColumn) throw new Error('Coluna "In Progress" não encontrada');
+            core.setOutput('column_id', inProgressColumn.id);
+      - name: Move Issue to In Progress
+        if: env.ISSUE_NUMBER != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = process.env.ISSUE_NUMBER;
+            const columnId = '${{ steps.get-column.outputs.column_id }}';
+            const issue = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber
+            });
+            const card = await github.rest.projects.createCard({
+              column_id: columnId,
+              content_id: issue.data.id,
+              content_type: 'Issue'
+            });
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
