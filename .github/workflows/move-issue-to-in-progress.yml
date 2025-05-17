@@ -1,4 +1,4 @@
-# .github/workflows/branch-to-project.yml
+# .github/workflows/move-issue-to-in-progress.yml
 name: Mover issue para In Progress no Project v2
 
 on:
@@ -9,8 +9,7 @@ permissions:
   contents: read
   issues: read
   pull-requests: write
-  # Para chamar a API GraphQL do Projects
-  administration: write
+  repository-projects: write
 
 jobs:
   move-issue-in-project:
@@ -30,23 +29,23 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const issueNumber = parseInt('${{ steps.extract.outputs.code }}', 10);
-            // Vai lançar erro se não existir
             const { data: issue } = await github.rest.issues.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: issueNumber
             });
-            return { id: issue.node_id };
+            // Retorna o node_id da issue para usar como itemId no Project v2
+            return issue.node_id;
 
       - name: Atualizar status no Project v2
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const projectId = '${{ secrets.PROJECT_V2_ID }}';
-            const itemId = '${{ steps.get_issue.outputs.result.id }}';
-            const fieldId = '${{ secrets.STATUS_FIELD_ID }}';
-            const optionId = '${{ secrets.IN_PROGRESS_OPTION_ID }}';
+            const projectId       = '${{ secrets.PROJECT_V2_ID }}';
+            const itemId          = '${{ steps.get_issue.outputs.result }}';
+            const fieldId         = '${{ secrets.STATUS_FIELD_ID }}';
+            const optionId        = '${{ secrets.IN_PROGRESS_OPTION_ID }}';
             const mutation = `
               mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
                 updateProjectV2ItemFieldValue(input: {
@@ -64,5 +63,4 @@ jobs:
                 }
               }
             `;
-            const variables = { projectId, itemId, fieldId, optionId };
-            await github.graphql(mutation, variables);
+            await github.graphql(mutation, { projectId, itemId, fieldId, optionId });
