@@ -10,7 +10,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment=":wrench: validating user before search in database" />
+    <list default="true" id="d61fe5c4-a631-475b-892f-93c42d90c8de" name="Changes" comment=":wrench: validating user before search in database">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/move-issue-to-in-progress.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/move-issue-to-in-progress.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigitalBankDDD/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,7 +47,7 @@
     ".NET Launch Settings Profile.DigitalBankDDD.Web: http.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feat/1__linking__test",
+    "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -141,7 +144,7 @@
       <workItem from="1721746346905" duration="11850000" />
       <workItem from="1722015060519" duration="6723000" />
       <workItem from="1722280905530" duration="3735000" />
-      <workItem from="1747611251152" duration="689000" />
+      <workItem from="1747611251152" duration="1127000" />
     </task>
     <task id="LOCAL-00001" summary=":sparkles: database context">
       <option name="closed" value="true" />
