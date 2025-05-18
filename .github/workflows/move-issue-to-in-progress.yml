@@ -24,10 +24,10 @@ jobs:
         run: |
           echo "Branch sem padrão de issue. Abortando."
 
-      - name: Autenticar GitHub CLI
-        if: env.matched == 'true'
-        run: |
-          echo "${{ secrets.PERSONAL_ACCESS_TOKEN }}" | gh auth login --with-token
+#      - name: Autenticar GitHub CLI
+#        if: env.matched == 'true'
+#        run: |
+#          echo "${{ secrets.PERSONAL_ACCESS_TOKEN }}" | gh auth login --with-token
 
       - name: Obter IDs do projeto e do campo Status
         if: env.matched == 'true'
