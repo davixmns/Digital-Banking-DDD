@@ -1,4 +1,4 @@
-name: Atualizar Status da Issue para In Progress na Criação de Branch
+name: Atualizar Status da Issue para In Progress (sem gh CLI)
 
 on:
   create:
@@ -8,111 +8,134 @@ on:
 jobs:
   update_issue_status:
     runs-on: ubuntu-latest
+
+    env:
+      GITHUB_API: https://api.github.com/graphql
+      AUTH_TOKEN: ${{ secrets.PAT_PROJECT }} # PAT com scope project e repo
+
     steps:
       - name: Extrair número da issue da branch
         id: extract
         run: |
           if [[ "${{ github.ref_name }}" =~ .*/([0-9]+)_.* ]]; then
             echo "ISSUE_NUMBER=${BASH_REMATCH[1]}" >> $GITHUB_ENV
-            echo "matched=true" >> $GITHUB_ENV
+            echo "matched=true"       >> $GITHUB_ENV
           else
-            echo "matched=false" >> $GITHUB_ENV
+            echo "matched=false"      >> $GITHUB_ENV
           fi
 
-      - name: Parar se não for branch de issue
+      - name: Abortar se não for branch de issue
         if: env.matched != 'true'
-        run: |
-          echo "Branch sem padrão de issue. Abortando."
+        run: echo "Branch sem número de issue. Saindo..."
 
-#      - name: Autenticar GitHub CLI
-#        if: env.matched == 'true'
-#        run: |
-#          echo "${{ secrets.PERSONAL_ACCESS_TOKEN }}" | gh auth login --with-token
-
-      - name: Obter IDs do projeto e do campo Status
+      - name: Obter dados do ProjectV2
         if: env.matched == 'true'
         run: |
-          gh api graphql -f query='
-            query {
-              viewer {
-                projectV2(number: 4) {
-                  id
-                  fields(first: 20) {
-                    nodes {
-                      ... on ProjectV2SingleSelectField {
-                        id
-                        name
-                        options {
-                          id
-                          name
-                        }
-                      }
+          read -r -d '' QUERY << 'EOF'
+          query {
+            viewer {
+              projectV2(number: 4) {
+                id
+                fields(first: 20) {
+                  nodes {
+                    ... on ProjectV2SingleSelectField {
+                      id
+                      name
+                      options { id name }
                     }
                   }
                 }
               }
-            }' > project.json
+            }
+          }
+          EOF
 
-          echo "PROJECT_ID=$(jq -r .data.viewer.projectV2.id project.json)" >> $GITHUB_ENV
-          echo "STATUS_FIELD_ID=$(jq -r '.data.viewer.projectV2.fields.nodes[] | select(.name==\"Status\") | .id' project.json)" >> $GITHUB_ENV
-          echo "IN_PROGRESS_OPTION_ID=$(jq -r '.data.viewer.projectV2.fields.nodes[] | select(.name==\"Status\") | .options[] | select(.name==\"In Progress\") | .id' project.json)" >> $GITHUB_ENV
+          curl -s -X POST "$GITHUB_API" \
+            -H "Authorization: bearer $AUTH_TOKEN" \
+            -d "{\"query\":$(jq -Rs . <<< \"$QUERY\")}" \
+            > project.json
 
-      - name: Obter o node ID da issue
+          export PROJECT_ID=$(jq -r .data.viewer.projectV2.id project.json)
+          export STATUS_FIELD_ID=$(jq -r '.data.viewer.projectV2.fields.nodes[] | select(.name=="Status") | .id' project.json)
+          export IN_PROGRESS_OPTION_ID=$(jq -r '.data.viewer.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name=="In Progress") | .id' project.json)
+
+          echo "PROJECT_ID=$PROJECT_ID"       >> $GITHUB_ENV
+          echo "STATUS_FIELD_ID=$STATUS_FIELD_ID" >> $GITHUB_ENV
+          echo "IN_PROGRESS_OPTION_ID=$IN_PROGRESS_OPTION_ID" >> $GITHUB_ENV
+
+      - name: Obter node ID da issue
         if: env.matched == 'true'
         run: |
-          ISSUE_ID=$(gh api graphql -f query='
-            query($owner:String!,$repo:String!,$number:Int!) {
-              repository(owner:$owner,name:$repo) {
-                issue(number:$number) { id }
+          read -r -d '' QUERY << 'EOF'
+          query($owner:String!,$repo:String!,$num:Int!) {
+            repository(owner:$owner,name:$repo) {
+              issue(number:$num) {
+                id
               }
-            }' \
-            -f owner="${{ github.repository_owner }}" \
-            -f repo="${{ github.event.repository.name }}" \
-            -f number=$ISSUE_NUMBER \
-            --jq .data.repository.issue.id)
+            }
+          }
+          EOF
+
+          ISSUE_ID=$(curl -s -X POST "$GITHUB_API" \
+            -H "Authorization: bearer $AUTH_TOKEN" \
+            -d "{\"query\":$(jq -Rs . <<< \"$QUERY\"),\"variables\":$(jq -n --arg owner "${{ github.repository_owner }}" \
+                                                                       --arg repo  "${{ github.event.repository.name }}" \
+                                                                       --argjson num $ISSUE_NUMBER \
+                                                                       '{owner:$owner,repo:$repo,num:$num}')}\
+            " | jq -r .data.repository.issue.id)
+
           echo "ISSUE_ID=$ISSUE_ID" >> $GITHUB_ENV
 
-      - name: Encontrar item do projeto associado à issue
+      - name: Localizar item do ProjectV2 para a issue
         if: env.matched == 'true'
         run: |
-          gh api graphql -f query='
-            query($project:ID!) {
-              node(id:$project) {
-                ... on ProjectV2 {
-                  items(first:100) {
-                    nodes {
-                      id
-                      content {
-                        __typename
-                        ... on Issue { id }
-                      }
-                    }
+          read -r -d '' QUERY << 'EOF'
+          query($proj:ID!) {
+            node(id:$proj) {
+              ... on ProjectV2 {
+                items(first:100) {
+                  nodes {
+                    id
+                    content { __typename ... on Issue { id } }
                   }
                 }
               }
-            }' -f project=$PROJECT_ID > items.json
+            }
+          }
+          EOF
 
-          ITEM_ID=$(jq -r --arg issueId "$ISSUE_ID" \
-            '.data.node.items.nodes[] | select(.content.id == $issueId) | .id' items.json)
+          ITEM_ID=$(curl -s -X POST "$GITHUB_API" \
+            -H "Authorization: bearer $AUTH_TOKEN" \
+            -d "{\"query\":$(jq -Rs . <<< \"$QUERY\"),\"variables\":$(jq -n --arg proj "$PROJECT_ID" '{proj:$proj}')}\
+            " | jq -r --arg iid "$ISSUE_ID" \
+                '.data.node.items.nodes[] | select(.content.id==$iid) | .id')
+
           echo "ITEM_ID=$ITEM_ID" >> $GITHUB_ENV
 
       - name: Atualizar Status para In Progress
         if: env.ITEM_ID
         run: |
-          gh api graphql -f query='
-            mutation($project:ID!,$item:ID!,$field:ID!,$option:String!) {
-              updateProjectV2ItemFieldValue(input:{
-                projectId:$project,
-                itemId:$item,
-                fieldId:$field,
-                value:{ singleSelectOptionId:$option }
-              }) { projectV2Item { id } }
-            }' \
-            -f project=$PROJECT_ID \
-            -f item=$ITEM_ID \
-            -f field=$STATUS_FIELD_ID \
-            -f option=$IN_PROGRESS_OPTION_ID
+          read -r -d '' MUTATION << 'EOF'
+          mutation($proj:ID!,$item:ID!,$field:ID!,$opt:String!) {
+            updateProjectV2ItemFieldValue(input:{
+              projectId:$proj,
+              itemId:$item,
+              fieldId:$field,
+              value:{ singleSelectOptionId:$opt }
+            }) {
+              projectV2Item { id }
+            }
+          }
+          EOF
 
-      - name: Log de conclusão
-        if: env.ITEM_ID
-        run: echo "Issue #$ISSUE_NUMBER movida para In Progress no projeto."
+          curl -s -X POST "$GITHUB_API" \
+            -H "Authorization: bearer $AUTH_TOKEN" \
+            -d "{\"query\":$(jq -Rs . <<< \"$MUTATION\"),\"variables\":$(jq -n \
+              --arg proj "$PROJECT_ID" \
+              --arg item "$ITEM_ID" \
+              --arg field "$STATUS_FIELD_ID" \
+              --arg opt "$IN_PROGRESS_OPTION_ID" \
+              '{proj:$proj,item:$item,field:$field,opt:$opt}')}" \
+            > response.json
+
+          echo "Issue #$ISSUE_NUMBER movida para In Progress."
