@@ -28,9 +28,10 @@ jobs:
         if: env.matched != 'true'
         run: echo "Branch sem número de issue. Saindo..."
 
-      - name: Obter dados do ProjectV2
+      - name: Obter dados do ProjectV2 (sem CLI)
         if: env.matched == 'true'
         run: |
+          # Aqui você abre apenas UM heredoc para carregar sua query em $QUERY
           read -r -d '' QUERY << 'EOF'
           query {
             viewer {
@@ -50,18 +51,29 @@ jobs:
           }
           EOF
 
-          curl -s -X POST "$GITHUB_API" \
-            -H "Authorization: bearer $AUTH_TOKEN" \
+          # Agora você chama o curl usando o QUERY carregado
+          curl -s -X POST https://api.github.com/graphql \
+            -H "Authorization: bearer ${{ secrets.PAT_PROJECT }}" \
             -d "{\"query\":$(jq -Rs . <<< \"$QUERY\")}" \
             > project.json
 
-          export PROJECT_ID=$(jq -r .data.viewer.projectV2.id project.json)
-          export STATUS_FIELD_ID=$(jq -r '.data.viewer.projectV2.fields.nodes[] | select(.name=="Status") | .id' project.json)
-          export IN_PROGRESS_OPTION_ID=$(jq -r '.data.viewer.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name=="In Progress") | .id' project.json)
+          # Extrai e exporta variáveis num único comando cada
+          jq -r .data.viewer.projectV2.id project.json \
+            | tee -a $GITHUB_ENV \
+            | xargs -I{} echo "PROJECT_ID={}"
+          jq -r '.data.viewer.projectV2.fields.nodes[]
+                   | select(.name=="Status")
+                   | .id' project.json \
+            | tee -a $GITHUB_ENV \
+            | xargs -I{} echo "STATUS_FIELD_ID={}"
+          jq -r '.data.viewer.projectV2.fields.nodes[]
+                   | select(.name=="Status")
+                   | .options[]
+                   | select(.name=="In Progress")
+                   | .id' project.json \
+            | tee -a $GITHUB_ENV \
+            | xargs -I{} echo "IN_PROGRESS_OPTION_ID={}"
 
-          echo "PROJECT_ID=$PROJECT_ID"       >> $GITHUB_ENV
-          echo "STATUS_FIELD_ID=$STATUS_FIELD_ID" >> $GITHUB_ENV
-          echo "IN_PROGRESS_OPTION_ID=$IN_PROGRESS_OPTION_ID" >> $GITHUB_ENV
 
       - name: Obter node ID da issue
         if: env.matched == 'true'
