@@ -15,9 +15,9 @@ jobs:
         run: |
           if [[ "${{ github.ref_name }}" =~ .*/([0-9]+)_.* ]]; then
             echo "ISSUE_NUMBER=${BASH_REMATCH[1]}" >> $GITHUB_ENV
-            echo "matched=true"       >> $GITHUB_ENV
+            echo "matched=true" >> $GITHUB_ENV
           else
-            echo "matched=false"      >> $GITHUB_ENV
+            echo "matched=false" >> $GITHUB_ENV
           fi
 
       - name: Abortar se não for branch de issue
@@ -51,21 +51,33 @@ jobs:
             -d "{\"query\":$(jq -Rs . <<< \"$QUERY\")}" \
             > project.json
 
-          jq -r .data.viewer.projectV2.id project.json \
-            | tee -a $GITHUB_ENV \
-            | xargs -I{} echo "PROJECT_ID={}"
-          jq -r '.data.viewer.projectV2.fields.nodes[]
-                   | select(.name=="Status")
-                   | .id' project.json \
-            | tee -a $GITHUB_ENV \
-            | xargs -I{} echo "STATUS_FIELD_ID={}"
-          jq -r '.data.viewer.projectV2.fields.nodes[]
-                   | select(.name=="Status")
-                   | .options[]
-                   | select(.name=="In Progress")
-                   | .id' project.json \
-            | tee -a $GITHUB_ENV \
-            | xargs -I{} echo "IN_PROGRESS_OPTION_ID={}"
+          # Verifica erros na resposta da API
+          if jq -e '.errors' project.json > /dev/null; then
+            echo "Erro na API GraphQL: $(jq -r '.errors[].message' project.json)"
+            exit 1
+          fi
+
+          # Define as variáveis de ambiente corretamente
+          PROJECT_ID=$(jq -r .data.viewer.projectV2.id project.json)
+          echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
+          if [ -z "$PROJECT_ID" ]; then
+            echo "Falha ao obter PROJECT_ID"
+            exit 1
+          fi
+
+          STATUS_FIELD_ID=$(jq -r '.data.viewer.projectV2.fields.nodes[] | select(.name=="Status") | .id' project.json)
+          echo "STATUS_FIELD_ID=$STATUS_FIELD_ID" >> $GITHUB_ENV
+          if [ -z "$STATUS_FIELD_ID" ]; then
+            echo "Falha ao obter STATUS_FIELD_ID"
+            exit 1
+          fi
+
+          IN_PROGRESS_OPTION_ID=$(jq -r '.data.viewer.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name=="In Progress") | .id' project.json)
+          echo "IN_PROGRESS_OPTION_ID=$IN_PROGRESS_OPTION_ID" >> $GITHUB_ENV
+          if [ -z "$IN_PROGRESS_OPTION_ID" ]; then
+            echo "Falha ao obter IN_PROGRESS_OPTION_ID"
+            exit 1
+          fi
 
       - name: Obter node ID da issue
         if: env.matched == 'true'
@@ -84,9 +96,13 @@ jobs:
               --arg owner "${{ github.repository_owner }}" \
               --arg repo  "${{ github.event.repository.name }}" \
               --argjson num $ISSUE_NUMBER \
-              '{owner:$owner,repo:$repo,num:$num}')}\
-            " | jq -r .data.repository.issue.id)
+              '{owner:$owner,repo:$repo,num:$num}')}" \
+            | jq -r .data.repository.issue.id)
 
+          if [ -z "$ISSUE_ID" ]; then
+            echo "Falha ao obter ISSUE_ID"
+            exit 1
+          fi
           echo "ISSUE_ID=$ISSUE_ID" >> $GITHUB_ENV
 
       - name: Localizar item do ProjectV2 para a issue
@@ -109,10 +125,13 @@ jobs:
 
           ITEM_ID=$(curl -s -X POST https://api.github.com/graphql \
             -H "Authorization: bearer ${{ secrets.DDDBankSecret }}" \
-            -d "{\"query\":$(jq -Rs . <<< \"$QUERY\"),\"variables\":$(jq -n --arg proj "$PROJECT_ID" '{proj:$proj}')}\
-            " | jq -r --arg iid "$ISSUE_ID" \
-                '.data.node.items.nodes[] | select(.content.id==$iid) | .id')
+            -d "{\"query\":$(jq -Rs . <<< \"$QUERY\"),\"variables\":$(jq -n --arg proj "$PROJECT_ID" '{proj:$proj}')}" \
+            | jq -r --arg iid "$ISSUE_ID" '.data.node.items.nodes[] | select(.content.id==$iid) | .id')
 
+          if [ -z "$ITEM_ID" ]; then
+            echo "Falha ao obter ITEM_ID"
+            exit 1
+          fi
           echo "ITEM_ID=$ITEM_ID" >> $GITHUB_ENV
 
       - name: Atualizar Status para In Progress
@@ -140,6 +159,12 @@ jobs:
               --arg opt "$IN_PROGRESS_OPTION_ID" \
               '{proj:$proj,item:$item,field:$field,opt:$opt}')}" \
             > response.json
+
+          # Verifica erros na resposta da API
+          if jq -e '.errors' response.json > /dev/null; then
+            echo "Erro na API GraphQL: $(jq -r '.errors[].message' response.json)"
+            exit 1
+          fi
 
       - name: Concluído
         if: env.ITEM_ID
