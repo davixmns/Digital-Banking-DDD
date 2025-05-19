@@ -24,14 +24,14 @@
         - name: Update issue status in Projects V2
           uses: actions/github-script@v6
           env:
-            GITHUB_TOKEN: ${{ secrets.PAT_PROJECTS_V2 }} # Use PAT with repo and project scopes
+            GITHUB_TOKEN: ${{ secrets.PAT_PROJECTS_V2 }} # PAT com escopos repo e project
           with:
             script: |
               const { owner, repo } = context.repo;
-              const projectNumber = 4; // Repository-level project number
+              const projectNumber = 4; // Projeto no nível do repositório
               const issueNumber = ${{ steps.extract.outputs.issue_number }};
               
-              // Get issue node ID
+              // Obter node ID da issue
               const issue = await github.rest.issues.get({
                 owner,
                 repo,
@@ -39,7 +39,7 @@
               });
               const issueNodeId = issue.data.node_id;
               
-              // Get project ID
+              // Obter ID do projeto
               const project = await github.graphql(
                 `query($owner: String!, $repo: String!, $projectNumber: Int!) {
                   repository(owner: $owner, name: $repo) {
@@ -65,13 +65,13 @@
               const projectId = project.repository.projectV2.id;
               const fields = project.repository.projectV2.fields.nodes;
               
-              // Find Status field and In Progress option
+              // Encontrar campo Status e opção In Progress
               const statusField = fields.find(field => field.name === 'Status');
-              if (!statusField) throw new Error('Status field not found');
+              if (!statusField) throw new Error('Campo Status não encontrado');
               const inProgressOption = statusField.options.find(option => option.name === 'In Progress');
-              if (!inProgressOption) throw new Error('In Progress option not found');
+              if (!inProgressOption) throw new Error('Opção In Progress não encontrada');
               
-              // Add issue to project or get existing item ID
+              // Adicionar issue ao projeto ou obter itemId existente
               const addItemResult = await github.graphql(
                 `mutation($projectId: ID!, $contentId: ID!) {
                   addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
@@ -84,7 +84,7 @@
               );
               const itemId = addItemResult.addProjectV2ItemById.item.id;
               
-              // Update status to In Progress
+              // Atualizar status para In Progress
               await github.graphql(
                 `mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
                   updateProjectV2ItemFieldValue(input: {
