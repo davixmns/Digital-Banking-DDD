@@ -1,167 +1,126 @@
-name: Atualizar Status da Issue para In Progress
+name: Update Issue Status on Branch Creation
 
 on:
   create:
-    branches:
-      - '**'
 
 jobs:
-  update_issue_status:
+  update-issue-status:
+    if: github.event.ref_type == 'branch'
     runs-on: ubuntu-latest
     steps:
-      - name: Extrair número da issue da branch
+      - name: Extract issue number from branch name
         id: extract
         run: |
-          if [[ "${{ github.ref_name }}" =~ .*/([0-9]+)_.* ]]; then
-            echo "ISSUE_NUMBER=${BASH_REMATCH[1]}" >> $GITHUB_ENV
-            echo "matched=true" >> $GITHUB_ENV
+          branch_name=${{ github.event.ref }}
+          if [[ $branch_name =~ ^feat\/([0-9]+)_ ]]; then
+            issue_number=${BASH_REMATCH[1]}
+            echo "issue_number=$issue_number" >> $GITHUB_OUTPUT
           else
-            echo "matched=false" >> $GITHUB_ENV
+            echo "No issue number found in branch name"
+            exit 1
           fi
 
-      - name: Abortar se não for branch de issue
-        if: env.matched != 'true'
-        run: echo "Branch sem número de issue. Saindo..." && exit 0
+      - name: Update issue status in Projects V2
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const projectNumber = 1; // Substitua pelo número do seu projeto
+            const issueNumber = ${{ steps.extract.outputs.issue_number }};
 
-      - name: Obter dados do ProjectV2
-        if: env.matched == 'true'
-        run: |
-          read -r -d '' QUERY << 'EOF'
-          query {
-            viewer {
-              projectV2(number: 4) {
-                id
-                fields(first: 20) {
-                  nodes {
-                    ... on ProjectV2SingleSelectField {
-                      id
-                      name
-                      options { id name }
+            // Obter o node_id da issue
+            const issue = await github.rest.issues.get({
+              owner,
+              repo,
+              issue_number: issueNumber,
+            });
+            const issueNodeId = issue.data.node_id;
+
+            // Obter informações do projeto
+            const project = await github.graphql(
+              `query($owner: String!, $repo: String!, $projectNumber: Int!) {
+                repository(owner: $owner, name: $repo) {
+                  projectV2(number: $projectNumber) {
+                    id
+                    fields(first: 100) {
+                      nodes {
+                        ... on ProjectV2SingleSelectField {
+                          id
+                          name
+                          options {
+                            id
+                            name
+                          }
+                        }
+                      }
                     }
                   }
                 }
-              }
-            }
-          }
-          EOF
+              }`,
+              { owner, repo, projectNumber }
+            );
 
-          curl -s -X POST https://api.github.com/graphql \
-            -H "Authorization: bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{\"query\":$(jq -Rs . <<< \"$QUERY\")}" \
-            > project.json
+            const projectId = project.repository.projectV2.id;
+            const fields = project.repository.projectV2.fields.nodes;
 
-          if jq -e '.errors' project.json > /dev/null; then
-            echo "Erro na API GraphQL: $(jq -r '.errors[].message' project.json)"
-            exit 1
-          fi
+            // Encontrar o campo "Status" e a opção "In Progress"
+            const statusField = fields.find(field => field.name === 'Status');
+            if (!statusField) throw new Error('Status field not found');
+            const inProgressOption = statusField.options.find(option => option.name === 'In Progress');
+            if (!inProgressOption) throw new Error('In Progress option not found');
 
-          PROJECT_ID=$(jq -r .data.viewer.projectV2.id project.json)
-          echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
-          if [ -z "$PROJECT_ID" ]; then
-            echo "Falha ao obter PROJECT_ID"
-            exit 1
-          fi
-
-          STATUS_FIELD_ID=$(jq -r '.data.viewer.projectV2.fields.nodes[] | select(.name=="Status") | .id' project.json)
-          echo "STATUS_FIELD_ID=$STATUS_FIELD_ID" >> $GITHUB_ENV
-          if [ -z "$STATUS_FIELD_ID" ]; then
-            echo "Falha ao obter STATUS_FIELD_ID"
-            exit 1
-          fi
-
-          IN_PROGRESS_OPTION_ID=$(jq -r '.data.viewer.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name=="In Progress") | .id' project.json)
-          echo "IN_PROGRESS_OPTION_ID=$IN_PROGRESS_OPTION_ID" >> $GITHUB_ENV
-          if [ -z "$IN_PROGRESS_OPTION_ID" ]; then
-            echo "Falha ao obter IN_PROGRESS_OPTION_ID"
-            exit 1
-          fi
-
-      - name: Obter node ID da issue
-        if: env.matched == 'true'
-        run: |
-          read -r -d '' QUERY << 'EOF'
-          query($owner:String!,$repo:String!,$num:Int!) {
-            repository(owner:$owner,name:$repo) {
-              issue(number:$num) { id }
-            }
-          }
-          EOF
-
-          ISSUE_ID=$(curl -s -X POST https://api.github.com/graphql \
-            -H "Authorization: bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{\"query\":$(jq -Rs . <<< \"$QUERY\"),\"variables\":$(jq -n \
-              --arg owner "${{ github.repository_owner }}" \
-              --arg repo  "${{ github.event.repository.name }}" \
-              --argjson num $ISSUE_NUMBER \
-              '{owner:$owner,repo:$repo,num:$num}')}" \
-            | jq -r .data.repository.issue.id)
-
-          if [ -z "$ISSUE_ID" ]; then
-            echo "Falha ao obter ISSUE_ID"
-            exit 1
-          fi
-          echo "ISSUE_ID=$ISSUE_ID" >> $GITHUB_ENV
-
-      - name: Localizar item do ProjectV2 para a issue
-        if: env.matched == 'true'
-        run: |
-          read -r -d '' QUERY << 'EOF'
-          query($proj:ID!) {
-            node(id:$proj) {
-              ... on ProjectV2 {
-                items(first:100) {
-                  nodes {
-                    id
-                    content { __typename ... on Issue { id } }
+            // Verificar se a issue já está no projeto
+            const items = await github.graphql(
+              `query($projectId: ID!, $issueNodeId: ID!) {
+                node(id: $projectId) {
+                  ... on ProjectV2 {
+                    items(first: 100, contentIds: [$issueNodeId]) {
+                      nodes {
+                        id
+                      }
+                    }
                   }
                 }
+              }`,
+              { projectId, issueNodeId }
+            );
+
+            let itemId;
+            if (items.node.items.nodes.length > 0) {
+              itemId = items.node.items.nodes[0].id;
+            } else {
+              // Adicionar a issue ao projeto
+              const addItem = await github.graphql(
+                `mutation($projectId: ID!, $contentId: ID!) {
+                  addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
+                    item {
+                      id
+                    }
+                  }
+                }`,
+                { projectId, contentId: issueNodeId }
+              );
+              itemId = addItem.addProjectV2ItemById.item.id;
+            }
+
+            // Atualizar o status para "In Progress"
+            await github.graphql(
+              `mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
+                updateProjectV2ItemFieldValue(input: {
+                  projectId: $projectId,
+                  itemId: $itemId,
+                  fieldId: $fieldId,
+                  value: { singleSelectOptionId: $value }
+                }) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }`,
+              {
+                projectId,
+                itemId,
+                fieldId: statusField.id,
+                value: inProgressOption.id,
               }
-            }
-          }
-          EOF
-
-          ITEM_ID=$(curl -s -X POST https://api.github.com/graphql \
-            -H "Authorization: bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{\"query\":$(jq -Rs . <<< \"$QUERY\"),\"variables\":$(jq -n --arg proj "$PROJECT_ID" '{proj:$proj}')}" \
-            | jq -r --arg iid "$ISSUE_ID" '.data.node.items.nodes[] | select(.content.id==$iid) | .id')
-
-          if [ -z "$ITEM_ID" ]; then
-            echo "Falha ao obter ITEM_ID"
-            exit 1
-          fi
-          echo "ITEM_ID=$ITEM_ID" >> $GITHUB_ENV
-
-      - name: Atualizar Status para In Progress
-        if: env.ITEM_ID
-        run: |
-          read -r -d '' MUTATION << 'EOF'
-          mutation($proj:ID!,$item:ID!,$field:ID!,$opt:String!) {
-            updateProjectV2ItemFieldValue(input:{
-              projectId:$proj,
-              itemId:$item,
-              fieldId:$field,
-              value:{ singleSelectOptionId:$opt }
-            }) {
-              projectV2Item { id }
-            }
-          }
-          EOF
-
-          curl -s -X POST https://api.github.com/graphql \
-            -H "Authorization: bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{\"query\":$(jq -Rs . <<< \"$MUTATION\"),\"variables\":$(jq -n \
-              --arg proj "$PROJECT_ID" \
-              --arg item "$ITEM_ID" \
-              --arg field "$STATUS_FIELD_ID" \
-              --arg opt "$IN_PROGRESS_OPTION_ID" \
-              '{proj:$proj,item:$item,field:$field,opt:$opt}')}" \
-            > response.json
-
-          if jq -e '.errors' response.json > /dev/null; then
-            echo "Erro na API GraphQL: $(jq -r '.errors[].message' response.json)"
-            exit 1
-          fi
-
-      - name: Concluído
-        if: env.ITEM_ID
-        run: echo "Issue #$ISSUE_NUMBER movida para In Progress com sucesso."
+            );
