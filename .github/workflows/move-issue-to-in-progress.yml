@@ -22,7 +22,7 @@ jobs:
       - name: List projects
         run: |
           echo '{"query": "query { repository(owner: \"${{ github.repository_owner }}\", name: \"${{ github.event.repository.name }}\") { projectsV2(first: 10) { nodes { id title number } } } }"}' | \
-          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          curl -H "Authorization: Bearer ${{ secrets.PAT_PROJECTS_V2 }}" \
                -H "Content-Type: application/json" \
                -X POST \
                -d @- \
