@@ -43,7 +43,7 @@
               // Query user-level project
               const project = await github.graphql(
                 `query($owner: String!, $projectNumber: Int!) {
-                  user(login: $owner) {
+                  repository(login: $owner) {
                     projectV2(number: $projectNumber) {
                       id
                       fields(first: 100) {
