@@ -25,7 +25,7 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo;
-            const projectNumber = 1; // Substitua pelo número do seu projeto
+            const projectNumber = 4; // Substitua pelo número do seu projeto
             const issueNumber = ${{ steps.extract.outputs.issue_number }};
 
             // Obter o node_id da issue
