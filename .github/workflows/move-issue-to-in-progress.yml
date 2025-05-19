@@ -9,10 +9,6 @@ jobs:
   update_issue_status:
     runs-on: ubuntu-latest
 
-    env:
-      GITHUB_API: https://api.github.com/graphql
-      AUTH_TOKEN: ${{ secrets.DDDBankSecret }} 
-
     steps:
       - name: Extrair número da issue da branch
         id: extract
@@ -28,10 +24,9 @@ jobs:
         if: env.matched != 'true'
         run: echo "Branch sem número de issue. Saindo..."
 
-      - name: Obter dados do ProjectV2 (sem CLI)
+      - name: Obter dados do ProjectV2
         if: env.matched == 'true'
         run: |
-          # Aqui você abre apenas UM heredoc para carregar sua query em $QUERY
           read -r -d '' QUERY << 'EOF'
           query {
             viewer {
@@ -51,13 +46,11 @@ jobs:
           }
           EOF
 
-          # Agora você chama o curl usando o QUERY carregado
           curl -s -X POST https://api.github.com/graphql \
-            -H "Authorization: bearer ${{ secrets.PAT_PROJECT }}" \
+            -H "Authorization: bearer ${{ secrets.DDDBankSecret }}" \
             -d "{\"query\":$(jq -Rs . <<< \"$QUERY\")}" \
             > project.json
 
-          # Extrai e exporta variáveis num único comando cada
           jq -r .data.viewer.projectV2.id project.json \
             | tee -a $GITHUB_ENV \
             | xargs -I{} echo "PROJECT_ID={}"
@@ -74,26 +67,24 @@ jobs:
             | tee -a $GITHUB_ENV \
             | xargs -I{} echo "IN_PROGRESS_OPTION_ID={}"
 
-
       - name: Obter node ID da issue
         if: env.matched == 'true'
         run: |
           read -r -d '' QUERY << 'EOF'
           query($owner:String!,$repo:String!,$num:Int!) {
             repository(owner:$owner,name:$repo) {
-              issue(number:$num) {
-                id
-              }
+              issue(number:$num) { id }
             }
           }
           EOF
 
-          ISSUE_ID=$(curl -s -X POST "$GITHUB_API" \
-            -H "Authorization: bearer $AUTH_TOKEN" \
-            -d "{\"query\":$(jq -Rs . <<< \"$QUERY\"),\"variables\":$(jq -n --arg owner "${{ github.repository_owner }}" \
-                                                                       --arg repo  "${{ github.event.repository.name }}" \
-                                                                       --argjson num $ISSUE_NUMBER \
-                                                                       '{owner:$owner,repo:$repo,num:$num}')}\
+          ISSUE_ID=$(curl -s -X POST https://api.github.com/graphql \
+            -H "Authorization: bearer ${{ secrets.DDDBankSecret }}" \
+            -d "{\"query\":$(jq -Rs . <<< \"$QUERY\"),\"variables\":$(jq -n \
+              --arg owner "${{ github.repository_owner }}" \
+              --arg repo  "${{ github.event.repository.name }}" \
+              --argjson num $ISSUE_NUMBER \
+              '{owner:$owner,repo:$repo,num:$num}')}\
             " | jq -r .data.repository.issue.id)
 
           echo "ISSUE_ID=$ISSUE_ID" >> $GITHUB_ENV
@@ -116,8 +107,8 @@ jobs:
           }
           EOF
 
-          ITEM_ID=$(curl -s -X POST "$GITHUB_API" \
-            -H "Authorization: bearer $AUTH_TOKEN" \
+          ITEM_ID=$(curl -s -X POST https://api.github.com/graphql \
+            -H "Authorization: bearer ${{ secrets.DDDBankSecret }}" \
             -d "{\"query\":$(jq -Rs . <<< \"$QUERY\"),\"variables\":$(jq -n --arg proj "$PROJECT_ID" '{proj:$proj}')}\
             " | jq -r --arg iid "$ISSUE_ID" \
                 '.data.node.items.nodes[] | select(.content.id==$iid) | .id')
@@ -140,8 +131,8 @@ jobs:
           }
           EOF
 
-          curl -s -X POST "$GITHUB_API" \
-            -H "Authorization: bearer $AUTH_TOKEN" \
+          curl -s -X POST https://api.github.com/graphql \
+            -H "Authorization: bearer ${{ secrets.DDDBankSecret }}" \
             -d "{\"query\":$(jq -Rs . <<< \"$MUTATION\"),\"variables\":$(jq -n \
               --arg proj "$PROJECT_ID" \
               --arg item "$ITEM_ID" \
@@ -150,4 +141,6 @@ jobs:
               '{proj:$proj,item:$item,field:$field,opt:$opt}')}" \
             > response.json
 
-          echo "Issue #$ISSUE_NUMBER movida para In Progress."
+      - name: Concluído
+        if: env.ITEM_ID
+        run: echo "Issue #$ISSUE_NUMBER movida para In Progress com sucesso."
