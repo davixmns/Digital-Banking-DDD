@@ -31,13 +31,15 @@ jobs:
 
       - name: Update issue status in Projects V2
         uses: actions/github-script@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_PROJECTS_V2 }} 
         with:
           script: |
             const { owner, repo } = context.repo;
-            const projectNumber = 4; // Substitua pelo número do seu projeto
+            const projectNumber = 4; // Confirmed from your output
             const issueNumber = ${{ steps.extract.outputs.issue_number }};
 
-            // Obter o node_id da issue
+            // Rest of your script remains unchanged
             const issue = await github.rest.issues.get({
               owner,
               repo,
@@ -45,7 +47,6 @@ jobs:
             });
             const issueNodeId = issue.data.node_id;
 
-            // Obter informações do projeto
             const project = await github.graphql(
               `query($owner: String!, $repo: String!, $projectNumber: Int!) {
                 repository(owner: $owner, name: $repo) {
@@ -72,13 +73,11 @@ jobs:
             const projectId = project.repository.projectV2.id;
             const fields = project.repository.projectV2.fields.nodes;
 
-            // Encontrar o campo "Status" e a opção "In Progress"
             const statusField = fields.find(field => field.name === 'Status');
             if (!statusField) throw new Error('Status field not found');
             const inProgressOption = statusField.options.find(option => option.name === 'In Progress');
             if (!inProgressOption) throw new Error('In Progress option not found');
 
-            // Verificar se a issue já está no projeto
             const items = await github.graphql(
               `query($projectId: ID!, $issueNodeId: ID!) {
                 node(id: $projectId) {
@@ -98,7 +97,6 @@ jobs:
             if (items.node.items.nodes.length > 0) {
               itemId = items.node.items.nodes[0].id;
             } else {
-              // Adicionar a issue ao projeto
               const addItem = await github.graphql(
                 `mutation($projectId: ID!, $contentId: ID!) {
                   addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
@@ -112,7 +110,6 @@ jobs:
               itemId = addItem.addProjectV2ItemById.item.id;
             }
 
-            // Atualizar o status para "In Progress"
             await github.graphql(
               `mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
                 updateProjectV2ItemFieldValue(input: {
