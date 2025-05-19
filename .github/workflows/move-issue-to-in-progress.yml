@@ -1,132 +1,130 @@
-name: Update Issue Status on Branch Creation
 
-on:
-  create:
+  name: Update Issue Status on Branch Creation
+  
+  on:
+    create:
+  
+  jobs:
+    update-issue-status:
+      if: github.event.ref_type == 'branch'
+      runs-on: ubuntu-latest
+      steps:
+        - name: Extract issue number from branch name
+          id: extract
+          run: |
+            branch_name=${{ github.event.ref }}
+            if [[ $branch_name =~ ^feat\/([0-9]+)_ ]]; then
+              issue_number=${BASH_REMATCH[1]}
+              echo "issue_number=$issue_number" >> $GITHUB_OUTPUT
+            else
+              echo "No issue number found in branch name"
+              exit 1
+            fi
 
-jobs:
-  update-issue-status:
-    if: github.event.ref_type == 'branch'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Extract issue number from branch name
-        id: extract
-        run: |
-          branch_name=${{ github.event.ref }}
-          if [[ $branch_name =~ ^feat\/([0-9]+)_ ]]; then
-            issue_number=${BASH_REMATCH[1]}
-            echo "issue_number=$issue_number" >> $GITHUB_OUTPUT
-          else
-            echo "No issue number found in branch name"
-            exit 1
-          fi
-      - name: List projects
-        run: |
-          echo '{"query": "query { repository(owner: \"${{ github.repository_owner }}\", name: \"${{ github.event.repository.name }}\") { projectsV2(first: 10) { nodes { id title number } } } }"}' | \
-          curl -H "Authorization: Bearer ${{ secrets.PAT_PROJECTS_V2 }}" \
-               -H "Content-Type: application/json" \
-               -X POST \
-               -d @- \
-               https://api.github.com/graphql | tee projects.json
-          cat projects.json
-
-      - name: Update issue status in Projects V2
-        uses: actions/github-script@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_PROJECTS_V2 }} 
-        with:
-          script: |
-            const { owner, repo } = context.repo;
-            const projectNumber = 4; // Confirmed from your output
-            const issueNumber = ${{ steps.extract.outputs.issue_number }};
-
-            // Rest of your script remains unchanged
-            const issue = await github.rest.issues.get({
-              owner,
-              repo,
-              issue_number: issueNumber,
-            });
-            const issueNodeId = issue.data.node_id;
-
-            const project = await github.graphql(
-              `query($owner: String!, $repo: String!, $projectNumber: Int!) {
-                repository(owner: $owner, name: $repo) {
-                  projectV2(number: $projectNumber) {
-                    id
-                    fields(first: 100) {
-                      nodes {
-                        ... on ProjectV2SingleSelectField {
-                          id
-                          name
-                          options {
+        - name: Update issue status in Projects V2
+          uses: actions/github-script@v6
+          env:
+            GITHUB_TOKEN: ${{ secrets.PAT_PROJECTS_V2 }} # Use PAT with project scope
+          with:
+            script: |
+              const owner = 'davixmns';
+              const repo = 'Digital-Banking-DDD';
+              const projectNumber = 4; // Project number from your output
+              const issueNumber = ${{ steps.extract.outputs.issue_number }};
+              
+              // Get issue node ID
+              const issue = await github.rest.issues.get({
+                owner,
+                repo,
+                issue_number: issueNumber,
+              });
+              const issueNodeId = issue.data.node_id;
+              
+              // Query user-level project
+              const project = await github.graphql(
+                `query($owner: String!, $projectNumber: Int!) {
+                  user(login: $owner) {
+                    projectV2(number: $projectNumber) {
+                      id
+                      fields(first: 100) {
+                        nodes {
+                          ... on ProjectV2SingleSelectField {
                             id
                             name
+                            options {
+                              id
+                              name
+                            }
                           }
                         }
                       }
                     }
                   }
-                }
-              }`,
-              { owner, repo, projectNumber }
-            );
-
-            const projectId = project.repository.projectV2.id;
-            const fields = project.repository.projectV2.fields.nodes;
-
-            const statusField = fields.find(field => field.name === 'Status');
-            if (!statusField) throw new Error('Status field not found');
-            const inProgressOption = statusField.options.find(option => option.name === 'In Progress');
-            if (!inProgressOption) throw new Error('In Progress option not found');
-
-            const items = await github.graphql(
-              `query($projectId: ID!, $issueNodeId: ID!) {
-                node(id: $projectId) {
-                  ... on ProjectV2 {
-                    items(first: 100, contentIds: [$issueNodeId]) {
-                      nodes {
-                        id
+                }`,
+                { owner, projectNumber }
+              );
+              
+              const projectId = project.user.projectV2.id;
+              const fields = project.user.projectV2.fields.nodes;
+              
+              // Find Status field and In Progress option
+              const statusField = fields.find(field => field.name === 'Status');
+              if (!statusField) throw new Error('Status field not found');
+              const inProgressOption = statusField.options.find(option => option.name === 'In Progress');
+              if (!inProgressOption) throw new Error('In Progress option not found');
+              
+              // Check if issue is already in the project
+              const items = await github.graphql(
+                `query($projectId: ID!, $issueNodeId: ID!) {
+                  node(id: $projectId) {
+                    ... on ProjectV2 {
+                      items(first: 100, contentIds: [$issueNodeId]) {
+                        nodes {
+                          id
+                        }
                       }
                     }
                   }
-                }
-              }`,
-              { projectId, issueNodeId }
-            );
-
-            let itemId;
-            if (items.node.items.nodes.length > 0) {
-              itemId = items.node.items.nodes[0].id;
-            } else {
-              const addItem = await github.graphql(
-                `mutation($projectId: ID!, $contentId: ID!) {
-                  addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
-                    item {
+                }`,
+                { projectId, issueNodeId }
+              );
+              
+              let itemId;
+              if (items.node.items.nodes.length > 0) {
+                itemId = items.node.items.nodes[0].id;
+              } else {
+                // Add issue to project
+                const addItem = await github.graphql(
+                  `mutation($projectId: ID!, $contentId: ID!) {
+                    addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
+                      item {
+                        id
+                      }
+                    }
+                  }`,
+                  { projectId, contentId: issueNodeId }
+                );
+                itemId = addItem.addProjectV2ItemById.item.id;
+              }
+              
+              // Update status to In Progress
+              await github.graphql(
+                `mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
+                  updateProjectV2ItemFieldValue(input: {
+                    projectId: $projectId,
+                    itemId: $itemId,
+                    fieldId: $fieldId,
+                    value: { singleSelectOptionId: $value }
+                  }) {
+                    projectV2Item {
                       id
                     }
                   }
                 }`,
-                { projectId, contentId: issueNodeId }
-              );
-              itemId = addItem.addProjectV2ItemById.item.id;
-            }
-
-            await github.graphql(
-              `mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $value: String!) {
-                updateProjectV2ItemFieldValue(input: {
-                  projectId: $projectId,
-                  itemId: $itemId,
-                  fieldId: $fieldId,
-                  value: { singleSelectOptionId: $value }
-                }) {
-                  projectV2Item {
-                    id
-                  }
+                {
+                  projectId,
+                  itemId,
+                  fieldId: statusField.id,
+                  value: inProgressOption.id,
                 }
-              }`,
-              {
-                projectId,
-                itemId,
-                fieldId: statusField.id,
-                value: inProgressOption.id,
-              }
-            );
+              );
