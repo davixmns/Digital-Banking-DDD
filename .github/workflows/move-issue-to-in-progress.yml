@@ -1,4 +1,4 @@
-name: Atualizar Status da Issue para In Progress (sem gh CLI)
+name: Atualizar Status da Issue para In Progress
 
 on:
   create:
@@ -8,7 +8,6 @@ on:
 jobs:
   update_issue_status:
     runs-on: ubuntu-latest
-
     steps:
       - name: Extrair número da issue da branch
         id: extract
@@ -22,7 +21,7 @@ jobs:
 
       - name: Abortar se não for branch de issue
         if: env.matched != 'true'
-        run: echo "Branch sem número de issue. Saindo..."
+        run: echo "Branch sem número de issue. Saindo..." && exit 0
 
       - name: Obter dados do ProjectV2
         if: env.matched == 'true'
@@ -47,17 +46,15 @@ jobs:
           EOF
 
           curl -s -X POST https://api.github.com/graphql \
-            -H "Authorization: bearer ${{ secrets.DDDBankSecret }}" \
+            -H "Authorization: bearer ${{ secrets.GITHUB_TOKEN }}" \
             -d "{\"query\":$(jq -Rs . <<< \"$QUERY\")}" \
             > project.json
 
-          # Verifica erros na resposta da API
           if jq -e '.errors' project.json > /dev/null; then
             echo "Erro na API GraphQL: $(jq -r '.errors[].message' project.json)"
             exit 1
           fi
 
-          # Define as variáveis de ambiente corretamente
           PROJECT_ID=$(jq -r .data.viewer.projectV2.id project.json)
           echo "PROJECT_ID=$PROJECT_ID" >> $GITHUB_ENV
           if [ -z "$PROJECT_ID" ]; then
@@ -91,7 +88,7 @@ jobs:
           EOF
 
           ISSUE_ID=$(curl -s -X POST https://api.github.com/graphql \
-            -H "Authorization: bearer ${{ secrets.DDDBankSecret }}" \
+            -H "Authorization: bearer ${{ secrets.GITHUB_TOKEN }}" \
             -d "{\"query\":$(jq -Rs . <<< \"$QUERY\"),\"variables\":$(jq -n \
               --arg owner "${{ github.repository_owner }}" \
               --arg repo  "${{ github.event.repository.name }}" \
@@ -124,7 +121,7 @@ jobs:
           EOF
 
           ITEM_ID=$(curl -s -X POST https://api.github.com/graphql \
-            -H "Authorization: bearer ${{ secrets.DDDBankSecret }}" \
+            -H "Authorization: bearer ${{ secrets.GITHUB_TOKEN }}" \
             -d "{\"query\":$(jq -Rs . <<< \"$QUERY\"),\"variables\":$(jq -n --arg proj "$PROJECT_ID" '{proj:$proj}')}" \
             | jq -r --arg iid "$ISSUE_ID" '.data.node.items.nodes[] | select(.content.id==$iid) | .id')
 
@@ -151,7 +148,7 @@ jobs:
           EOF
 
           curl -s -X POST https://api.github.com/graphql \
-            -H "Authorization: bearer ${{ secrets.DDDBankSecret }}" \
+            -H "Authorization: bearer ${{ secrets.GITHUB_TOKEN }}" \
             -d "{\"query\":$(jq -Rs . <<< \"$MUTATION\"),\"variables\":$(jq -n \
               --arg proj "$PROJECT_ID" \
               --arg item "$ITEM_ID" \
@@ -160,7 +157,6 @@ jobs:
               '{proj:$proj,item:$item,field:$field,opt:$opt}')}" \
             > response.json
 
-          # Verifica erros na resposta da API
           if jq -e '.errors' response.json > /dev/null; then
             echo "Erro na API GraphQL: $(jq -r '.errors[].message' response.json)"
             exit 1
